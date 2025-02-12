@@ -49,6 +49,16 @@ class App extends Component {
         this.setState({ scenarioText: scenarios[scenarioIndex] });
     }
 
+    downloadJSON(filename, data) {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     handleNextScreen = () => {
         const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID } = this.state;
 
@@ -71,8 +81,9 @@ class App extends Component {
                     this.loadScenario
                 );
             } else {
-                console.log("Final responses: ", JSON.stringify(updatedResponses, null, 2));
-                alert("You have completed all scenarios!");
+                this.setState({ currentScreen: "done", responses: updatedResponses }, () => {
+                    this.downloadJSON(`${participantID}.json`, updatedResponses);
+                });
             }
         }
     };
@@ -113,6 +124,14 @@ class App extends Component {
                             <h2>Enter Participant ID:</h2>
                             <FormControl type="text" value={participantID} onChange={this.handleParticipantIDChange} />
                             <Button onClick={this.handleNextScreen}>Next</Button>
+                        </Col>
+                    </Row>
+                )}
+                {currentScreen === "done" && (
+                    <Row>
+                        <Col sm={12}>
+                            <h2>Thank you for participating!</h2>
+                            <p>Your responses have been saved successfully.</p>
                         </Col>
                     </Row>
                 )}
