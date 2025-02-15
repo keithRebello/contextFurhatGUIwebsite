@@ -8221,18 +8221,24 @@ var App = function (_Component) {
                 _this.setState({ currentScreen: "scenarioDisplay" });
             } else if (currentScreen === "scenarioDisplay") {
                 _this.setState({ currentScreen: "scenarioRating" });
-            } else if (currentScreen === "scenarioRating") {
+            } else if (currentScreen === "scenarioRating" && selectedEmotion !== "Neutral") {
                 _this.setState({ currentScreen: "scenarioScaling" });
-            } else if (currentScreen === "scenarioScaling") {
+            } else if (currentScreen === "scenarioScaling" || currentScreen === "scenarioRating" && selectedEmotion === "Neutral") {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
                 var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenario: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity }]);
                 if (iteration < 8) {
-                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses }, _this.loadScenario);
+                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50 }, _this.loadScenario);
                 } else {
-                    console.log("Final responses: ", JSON.stringify(updatedResponses, null, 2));
-                    alert("You have completed all scenarios!");
+                    _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
+                        _this.downloadJSON(participantID + ".json", updatedResponses);
+                    });
                 }
+                _this.furhat.send({
+                    event_name: "updateEmotionIntensity",
+                    emotion: "Neutral",
+                    intensity: 0
+                });
             }
         };
 
@@ -8250,6 +8256,11 @@ var App = function (_Component) {
                     alert("The intensity cannot be less than 0%.");
                     newIntensity = 0;
                 }
+                _this.furhat.send({
+                    event_name: "updateEmotionIntensity",
+                    emotion: _this.state.selectedEmotion,
+                    intensity: _this.state.intensity
+                });
                 return { intensity: newIntensity };
             });
         };
@@ -8263,7 +8274,7 @@ var App = function (_Component) {
             iteration: 1,
             speaking: false,
             scenarioText: "",
-            emotionOptions: ["Happy", "Sad", "Angry", "Surprised", "Neutral"],
+            emotionOptions: ["Joy", "Sadness", "Anger", "Surprise", "Disgust", "Fear", "Neutral"],
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
@@ -8302,6 +8313,17 @@ var App = function (_Component) {
             var scenarios = ["You encounter a stranger asking for directions.", "A dog approaches you in the park, barking loudly.", "Your friend tells you they have exciting news to share.", "Someone accidentally spills coffee on you at a café."];
             var scenarioIndex = (this.state.iteration - 1) % scenarios.length;
             this.setState({ scenarioText: scenarios[scenarioIndex] });
+        }
+    }, {
+        key: "downloadJSON",
+        value: function downloadJSON(filename, data) {
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     }, {
         key: "render",
@@ -8351,6 +8373,24 @@ var App = function (_Component) {
                         )
                     )
                 ),
+                currentScreen === "done" && _react2.default.createElement(
+                    _reactBootstrap.Row,
+                    null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12 },
+                        _react2.default.createElement(
+                            "h2",
+                            null,
+                            "Thank you for helping to create Furhat's responses to these scenarios!"
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "Your responses have been saved successfully. You may now exit the room and inform the researcher."
+                        )
+                    )
+                ),
                 currentScreen === "scenarioDisplay" && _react2.default.createElement(
                     _reactBootstrap.Row,
                     null,
@@ -8377,6 +8417,15 @@ var App = function (_Component) {
                 currentScreen === "scenarioRating" && _react2.default.createElement(
                     _reactBootstrap.Row,
                     null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12 },
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            scenarioText
+                        )
+                    ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { sm: 12 },
@@ -8409,9 +8458,20 @@ var App = function (_Component) {
                         _reactBootstrap.Col,
                         { sm: 12 },
                         _react2.default.createElement(
+                            "p",
+                            null,
+                            scenarioText
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12 },
+                        _react2.default.createElement(
                             "h2",
                             null,
-                            "How intense should Furhat's expression be?"
+                            "How intense should Furhat's expression of ",
+                            this.state.selectedEmotion,
+                            " be?"
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
@@ -8444,6 +8504,15 @@ var App = function (_Component) {
                 currentScreen === "scenarioQuestions" && _react2.default.createElement(
                     _reactBootstrap.Row,
                     null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12 },
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            scenarioText
+                        )
+                    ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { sm: 12 },

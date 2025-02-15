@@ -10,7 +10,7 @@ class App extends Component {
             iteration: 1,
             speaking: false,
             scenarioText: "",
-            emotionOptions: ["Happy", "Sad", "Angry", "Surprised", "Neutral"],
+            emotionOptions: ["Joy", "Sadness", "Anger", "Surprise", "Disgust", "Fear", "Neutral"],
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
@@ -66,9 +66,9 @@ class App extends Component {
             this.setState({ currentScreen: "scenarioDisplay" });
         } else if (currentScreen === "scenarioDisplay") {
             this.setState({ currentScreen: "scenarioRating" });
-        } else if (currentScreen === "scenarioRating") {
+        } else if (currentScreen === "scenarioRating" && selectedEmotion !== "Neutral") {
             this.setState({ currentScreen: "scenarioScaling" });
-        } else if (currentScreen === "scenarioScaling") {
+        } else if (currentScreen === "scenarioScaling" || (currentScreen === "scenarioRating" && selectedEmotion === "Neutral")) {
             this.setState({ currentScreen: "scenarioQuestions" });
         } else if (currentScreen === "scenarioQuestions") {
             const updatedResponses = [
@@ -77,7 +77,7 @@ class App extends Component {
             ];
             if (iteration < 8) {
                 this.setState(
-                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses },
+                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50},
                     this.loadScenario
                 );
             } else {
@@ -85,6 +85,11 @@ class App extends Component {
                     this.downloadJSON(`${participantID}.json`, updatedResponses);
                 });
             }
+            this.furhat.send({
+                event_name: "updateEmotionIntensity",
+                emotion: "Neutral",
+                intensity: 0
+            })
         }
     };
 
@@ -102,6 +107,11 @@ class App extends Component {
                 alert("The intensity cannot be less than 0%.");
                 newIntensity = 0;
             }
+            this.furhat.send({
+                event_name: "updateEmotionIntensity",
+                emotion: this.state.selectedEmotion,
+                intensity: this.state.intensity
+            })
             return { intensity: newIntensity };
         });
     };
@@ -130,8 +140,8 @@ class App extends Component {
                 {currentScreen === "done" && (
                     <Row>
                         <Col sm={12}>
-                            <h2>Thank you for participating!</h2>
-                            <p>Your responses have been saved successfully.</p>
+                            <h2>Thank you for helping to create Furhat's responses to these scenarios!</h2>
+                            <p>Your responses have been saved successfully. You may now exit the room and inform the researcher.</p>
                         </Col>
                     </Row>
                 )}
@@ -144,6 +154,8 @@ class App extends Component {
                 )}
                 {currentScreen === "scenarioRating" && (
                     <Row>
+                        <Col sm={12}><p>{scenarioText}</p>
+                        </Col>
                         <Col sm={12}><h2>Furhat should respond with which emotion?</h2>
                             {emotionOptions.map((emotion) => (
                                 <Button key={emotion} onClick={() => this.handleEmotionSelect(emotion)}>{emotion}</Button>
@@ -155,7 +167,9 @@ class App extends Component {
                 )}
                 {currentScreen === "scenarioScaling" && (
                     <Row>
-                        <Col sm={12}><h2>How intense should Furhat's expression be?</h2>
+                        <Col sm={12}><p>{scenarioText}</p>
+                        </Col>
+                        <Col sm={12}><h2>How intense should Furhat's expression of {this.state.selectedEmotion} be?</h2>
                             <Button onClick={() => this.handleIntensityChange(10)}>More +</Button>
                             <span style={{ margin: "0 10px", fontWeight: "bold" }}>{intensity}%</span>
                             <Button onClick={() => this.handleIntensityChange(-10)}>Less -</Button>
@@ -165,6 +179,8 @@ class App extends Component {
                 )}
                 {currentScreen === "scenarioQuestions" && (
                     <Row>
+                        <Col sm={12}><p>{scenarioText}</p>
+                        </Col>
                         <Col sm={12}><h2>Why did you pick this expression?</h2>
                             <textarea style={{ width: "100%", height: "100px" }}></textarea>
                             <h2>What would you want Furhat to say?</h2>
