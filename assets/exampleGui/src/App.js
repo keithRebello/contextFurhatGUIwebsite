@@ -16,6 +16,8 @@ class App extends Component {
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
+            question1: "",
+            question2: "",
             responses: [] // Store user responses
         };
         this.furhat = null;
@@ -66,7 +68,7 @@ class App extends Component {
     }
 
     handleNextScreen = () => {
-        const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID } = this.state;
+        const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID, question1, question2  } = this.state;
 
         if (currentScreen === "participantID") {
             this.setState({ currentScreen: "scenarioDisplay" });
@@ -79,11 +81,11 @@ class App extends Component {
         } else if (currentScreen === "scenarioQuestions") {
             const updatedResponses = [
                 ...responses,
-                { participantID, scenarioEmotion: this.state.scenarioEmotion, scenarioIntensity: this.state.scenarioIntensity, scenarioText: this.state.scenarioText, emotion: selectedEmotion, intensity }
+                { participantID, scenarioEmotion: this.state.scenarioEmotion, scenarioIntensity: this.state.scenarioIntensity, scenarioText: this.state.scenarioText, emotion: selectedEmotion, intensity, question1, question2}
             ];
             if (iteration < 8) {
                 this.setState(
-                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50},
+                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "" },
                     this.loadScenario
                 );
             } else {
@@ -98,6 +100,11 @@ class App extends Component {
             })
         }
     };
+
+    handleBackScreen = () => {
+        this.setState({ currentScreen: "scenarioRating" });
+    };
+
 
     handleEmotionSelect = (emotion) => {
         this.setState({ selectedEmotion: emotion });
@@ -122,12 +129,26 @@ class App extends Component {
         });
     };
 
+    handleQuestionChange = (event, question) => {
+        this.setState({ [question]: event.target.value });
+    };
+
     handleParticipantIDChange = (event) => {
         this.setState({ participantID: event.target.value });
     };
 
+    handleResetIntensity = () => {
+        this.setState({ intensity: 50 });
+        this.furhat.send({
+            event_name: "updateEmotionIntensity",
+            emotion: this.state.selectedEmotion,
+            intensity: 50
+        })
+    };
+
+
     render() {
-        const { currentScreen, scenarioText, emotionOptions, intensity, participantID } = this.state;
+        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, question1, question2 } = this.state;
 
         return (
             <Grid>
@@ -179,7 +200,10 @@ class App extends Component {
                             <Button onClick={() => this.handleIntensityChange(10)}>More +</Button>
                             <span style={{ margin: "0 10px", fontWeight: "bold" }}>{intensity}%</span>
                             <Button onClick={() => this.handleIntensityChange(-10)}>Less -</Button>
-                            <br /><Button onClick={this.handleNextScreen}>Next</Button>
+                            <br />
+                            <Button onClick={this.handleResetIntensity} style={{ marginRight: "10px" }}>Reset</Button>
+                            <Button onClick={this.handleBackScreen} style={{ marginRight: "10px" }}>Back</Button>
+                            <Button onClick={this.handleNextScreen}>Next</Button>
                         </Col>
                     </Row>
                 )}
@@ -188,9 +212,9 @@ class App extends Component {
                         <Col sm={12}><p>{scenarioText}</p>
                         </Col>
                         <Col sm={12}><h2>Why did you pick this expression?</h2>
-                            <textarea style={{ width: "100%", height: "100px" }}></textarea>
+                            <textarea style={{ width: "100%", height: "100px" }} value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
                             <h2>What would you want Furhat to say?</h2>
-                            <textarea style={{ width: "100%", height: "100px" }}></textarea>
+                            <textarea style={{ width: "100%", height: "100px" }} value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
                             <Button onClick={this.handleNextScreen}>Done</Button>
                         </Col>
                     </Row>

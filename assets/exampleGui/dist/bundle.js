@@ -8191,6 +8191,8 @@ var _reactBootstrap = __webpack_require__(258);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -8214,7 +8216,9 @@ var App = function (_Component) {
                 responses = _this$state.responses,
                 selectedEmotion = _this$state.selectedEmotion,
                 intensity = _this$state.intensity,
-                participantID = _this$state.participantID;
+                participantID = _this$state.participantID,
+                question1 = _this$state.question1,
+                question2 = _this$state.question2;
 
 
             if (currentScreen === "participantID") {
@@ -8226,9 +8230,9 @@ var App = function (_Component) {
             } else if (currentScreen === "scenarioScaling" || currentScreen === "scenarioRating" && selectedEmotion === "Neutral") {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
-                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity }]);
+                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity, question1: question1, question2: question2 }]);
                 if (iteration < 8) {
-                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50 }, _this.loadScenario);
+                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "" }, _this.loadScenario);
                 } else {
                     _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
                         _this.downloadJSON(participantID + ".json", updatedResponses);
@@ -8240,6 +8244,10 @@ var App = function (_Component) {
                     intensity: 0
                 });
             }
+        };
+
+        _this.handleBackScreen = function () {
+            _this.setState({ currentScreen: "scenarioRating" });
         };
 
         _this.handleEmotionSelect = function (emotion) {
@@ -8265,8 +8273,21 @@ var App = function (_Component) {
             });
         };
 
+        _this.handleQuestionChange = function (event, question) {
+            _this.setState(_defineProperty({}, question, event.target.value));
+        };
+
         _this.handleParticipantIDChange = function (event) {
             _this.setState({ participantID: event.target.value });
+        };
+
+        _this.handleResetIntensity = function () {
+            _this.setState({ intensity: 50 });
+            _this.furhat.send({
+                event_name: "updateEmotionIntensity",
+                emotion: _this.state.selectedEmotion,
+                intensity: 50
+            });
         };
 
         _this.state = {
@@ -8280,6 +8301,8 @@ var App = function (_Component) {
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
+            question1: "",
+            question2: "",
             responses: [] // Store user responses
         };
         _this.furhat = null;
@@ -8337,7 +8360,9 @@ var App = function (_Component) {
                 scenarioText = _state.scenarioText,
                 emotionOptions = _state.emotionOptions,
                 intensity = _state.intensity,
-                participantID = _state.participantID;
+                participantID = _state.participantID,
+                question1 = _state.question1,
+                question2 = _state.question2;
 
 
             return _react2.default.createElement(
@@ -8498,6 +8523,16 @@ var App = function (_Component) {
                         _react2.default.createElement("br", null),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
+                            { onClick: this.handleResetIntensity, style: { marginRight: "10px" } },
+                            "Reset"
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
+                            { onClick: this.handleBackScreen, style: { marginRight: "10px" } },
+                            "Back"
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
                             { onClick: this.handleNextScreen },
                             "Next"
                         )
@@ -8523,13 +8558,17 @@ var App = function (_Component) {
                             null,
                             "Why did you pick this expression?"
                         ),
-                        _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" } }),
+                        _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" }, value: question1, onChange: function onChange(e) {
+                                return _this4.handleQuestionChange(e, "question1");
+                            } }),
                         _react2.default.createElement(
                             "h2",
                             null,
                             "What would you want Furhat to say?"
                         ),
-                        _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" } }),
+                        _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" }, value: question2, onChange: function onChange(e) {
+                                return _this4.handleQuestionChange(e, "question2");
+                            } }),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
                             { onClick: this.handleNextScreen },
