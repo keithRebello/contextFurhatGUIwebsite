@@ -8226,7 +8226,7 @@ var App = function (_Component) {
             } else if (currentScreen === "scenarioScaling" || currentScreen === "scenarioRating" && selectedEmotion === "Neutral") {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
-                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenario: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity }]);
+                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity }]);
                 if (iteration < 8) {
                     _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50 }, _this.loadScenario);
                 } else {
@@ -8273,6 +8273,8 @@ var App = function (_Component) {
             currentScreen: "participantID", // Start at participant ID screen
             iteration: 1,
             speaking: false,
+            scenarioEmotion: "",
+            scenarioIntensity: 0,
             scenarioText: "",
             emotionOptions: ["Joy", "Sadness", "Anger", "Surprise", "Disgust", "Fear", "Neutral"],
             selectedEmotion: "",
@@ -8310,9 +8312,9 @@ var App = function (_Component) {
     }, {
         key: "loadScenario",
         value: function loadScenario() {
-            var scenarios = ["You encounter a stranger asking for directions.", "A dog approaches you in the park, barking loudly.", "Your friend tells you they have exciting news to share.", "Someone accidentally spills coffee on you at a café."];
+            var scenarios = [{ emotion: "Joy", intensity: "100", text: " I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. " }, { emotion: "Sadness", intensity: "0", text: "I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  " }, { emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down. " }, { emotion: "Fear", intensity: "100", text: " I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely. " }, { emotion: "Disgust", intensity: "0", text: " I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { emotion: "Joy", intensity: "0", text: " My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside. " }, { emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special. " }, { emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair.  " }];
             var scenarioIndex = (this.state.iteration - 1) % scenarios.length;
-            this.setState({ scenarioText: scenarios[scenarioIndex] });
+            this.setState({ scenarioText: scenarios[scenarioIndex].text, scenarioEmotion: scenarios[scenarioIndex].emotion, scenarioIntensity: scenarios[scenarioIndex].intensity });
         }
     }, {
         key: "downloadJSON",
