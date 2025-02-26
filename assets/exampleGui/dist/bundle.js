@@ -8201,6 +8201,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function shuffle(array) {
+    var counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        var index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        var temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+}
+
+var scenarios = [{ emotion: "Joy", intensity: "100", text: " I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. " }, { emotion: "Sadness", intensity: "0", text: "I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  " }, { emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down. " }, { emotion: "Fear", intensity: "100", text: " I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely. " }, { emotion: "Disgust", intensity: "0", text: " I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { emotion: "Joy", intensity: "0", text: " My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside. " }, { emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special. " }, { emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair.  " }];
+var shuffledScenarios = shuffle(scenarios);
+
 var App = function (_Component) {
     _inherits(App, _Component);
 
@@ -8236,6 +8259,9 @@ var App = function (_Component) {
                 } else {
                     _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
                         _this.downloadJSON(participantID + ".json", updatedResponses);
+                    });
+                    _this.furhat.send({
+                        event_name: "endingScreen"
                     });
                 }
                 _this.furhat.send({
@@ -8350,9 +8376,9 @@ var App = function (_Component) {
     }, {
         key: "loadScenario",
         value: function loadScenario() {
-            var scenarios = [{ emotion: "Joy", intensity: "100", text: " I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. " }, { emotion: "Sadness", intensity: "0", text: "I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  " }, { emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down. " }, { emotion: "Fear", intensity: "100", text: " I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely. " }, { emotion: "Disgust", intensity: "0", text: " I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { emotion: "Joy", intensity: "0", text: " My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside. " }, { emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special. " }, { emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair.  " }];
+            console.log(shuffledScenarios);
             var scenarioIndex = (this.state.iteration - 1) % scenarios.length;
-            this.setState({ scenarioText: scenarios[scenarioIndex].text, scenarioEmotion: scenarios[scenarioIndex].emotion, scenarioIntensity: scenarios[scenarioIndex].intensity });
+            this.setState({ scenarioText: shuffledScenarios[scenarioIndex].text, scenarioEmotion: shuffledScenarios[scenarioIndex].emotion, scenarioIntensity: shuffledScenarios[scenarioIndex].intensity });
         }
     }, {
         key: "downloadJSON",
@@ -8403,9 +8429,86 @@ var App = function (_Component) {
                         _reactBootstrap.Col,
                         { sm: 12 },
                         _react2.default.createElement(
-                            "h2",
+                            "h3",
                             null,
-                            " You will now design Furhat's emotional expressions for six different scenarios.  For each scenario, you will be able to see what each expression will look like on the physical Furhat next to this screen."
+                            " Welcome! "
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "The robot on your left is ",
+                            _react2.default.createElement(
+                                "b",
+                                null,
+                                "Furhat"
+                            ),
+                            ", a humanoid social robot designed to interact with people. In this study, Furhat will take on the role of a ",
+                            _react2.default.createElement(
+                                "b",
+                                null,
+                                "peer mentor"
+                            ),
+                            " for adolescents."
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "Your task is to ",
+                            _react2.default.createElement(
+                                "b",
+                                null,
+                                "design Furhat\u2019s empathetic emotional expressions"
+                            ),
+                            "  for six different scenarios that an adolescent will share with the robot during a one-on-one interaction."
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "For each scenario, you will:"
+                        ),
+                        _react2.default.createElement(
+                            "ul",
+                            null,
+                            _react2.default.createElement(
+                                "li",
+                                null,
+                                _react2.default.createElement(
+                                    "b",
+                                    null,
+                                    "Select an emotion"
+                                ),
+                                " that Furhat should express."
+                            ),
+                            _react2.default.createElement(
+                                "li",
+                                null,
+                                _react2.default.createElement(
+                                    "b",
+                                    null,
+                                    "Adjust the intensity"
+                                ),
+                                " of the emotion to match the situation."
+                            ),
+                            _react2.default.createElement(
+                                "li",
+                                null,
+                                _react2.default.createElement(
+                                    "b",
+                                    null,
+                                    "See your changes in real time"
+                                ),
+                                " \u2014each time you adjust the emotion or intensity, the Furhat robot will display the updated expression."
+                            )
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "Take your time exploring the different options to create expressions that feel natural and appropriate. "
+                        ),
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "When you're ready, proceed to the first scenario!"
                         ),
                         _react2.default.createElement(
                             "h2",
@@ -8429,12 +8532,12 @@ var App = function (_Component) {
                         _react2.default.createElement(
                             "h2",
                             null,
-                            "Thank you for helping to create Furhat's responses to these scenarios!"
+                            "Your responses have been saved successfully. You may now exit the room and inform the researcher."
                         ),
                         _react2.default.createElement(
                             "p",
                             null,
-                            "Your responses have been saved successfully. You may now exit the room and inform the researcher."
+                            "Thank you for helping to create Furhat's responses to these scenarios!"
                         )
                     )
                 ),
@@ -8497,7 +8600,7 @@ var App = function (_Component) {
                             null,
                             "It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  "
                         ),
-                        emotionOptions.map(function (emotion) {
+                        shuffle(emotionOptions).map(function (emotion) {
                             return _react2.default.createElement(
                                 _reactBootstrap.Button,
                                 { key: emotion, onClick: function onClick() {
