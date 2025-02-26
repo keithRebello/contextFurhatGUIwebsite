@@ -12,7 +12,7 @@ class App extends Component {
             scenarioEmotion: "",
             scenarioIntensity: 0,
             scenarioText: "",
-            emotionOptions: ["Joy", "Sadness", "Anger", "Surprise", "Disgust", "Fear", "Neutral"],
+            emotionOptions: ["E1", "E2", "E3", "E4", "E5", "E6", "Neutral"],
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
@@ -103,11 +103,26 @@ class App extends Component {
 
     handleBackScreen = () => {
         this.setState({ currentScreen: "scenarioRating" });
+        this.furhat.send({
+            event_name: "updateEmotionIntensity",
+            emotion: "Neutral",
+            intensity: 0
+        })
     };
 
 
     handleEmotionSelect = (emotion) => {
         this.setState({ selectedEmotion: emotion });
+        this.furhat.send({
+            event_name: "updateEmotionIntensity",
+            emotion: "Neutral",
+            intensity: 0
+        })
+        this.furhat.send({
+            event_name: "updateEmotionIntensity",
+            emotion: emotion,
+            intensity: 50
+        })
     };
 
     handleIntensityChange = (change) => {
@@ -158,6 +173,7 @@ class App extends Component {
                 {currentScreen === "participantID" && (
                     <Row>
                         <Col sm={12}>
+                            <h2> You will now design Furhat's emotional expressions for six different scenarios.  For each scenario, you will be able to see what each expression will look like on the physical Furhat next to this screen.</h2>
                             <h2>Enter Participant ID:</h2>
                             <FormControl type="text" value={participantID} onChange={this.handleParticipantIDChange} />
                             <Button onClick={this.handleNextScreen}>Next</Button>
@@ -174,6 +190,8 @@ class App extends Component {
                 )}
                 {currentScreen === "scenarioDisplay" && (
                     <Row>
+                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
+                        </Col>
                         <Col sm={12}><h2>Read the following scenario:</h2><p>{scenarioText}</p>
                             <Button onClick={this.handleNextScreen}>Done</Button>
                         </Col>
@@ -183,7 +201,8 @@ class App extends Component {
                     <Row>
                         <Col sm={12}><p>{scenarioText}</p>
                         </Col>
-                        <Col sm={12}><h2>Furhat should respond with which emotion?</h2>
+                        <Col sm={12}><h2>Furhat should respond with which expression? </h2>
+                            <b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  </b>
                             {emotionOptions.map((emotion) => (
                                 <Button key={emotion} onClick={() => this.handleEmotionSelect(emotion)}>{emotion}</Button>
                             ))}
@@ -196,7 +215,7 @@ class App extends Component {
                     <Row>
                         <Col sm={12}><p>{scenarioText}</p>
                         </Col>
-                        <Col sm={12}><h2>How intense should Furhat's expression of {this.state.selectedEmotion} be?</h2>
+                        <Col sm={12}><h2>How intense should Furhat's expression of {this.state.selectedEmotion} be? <b>You can view the different intensities on the physical Furhat robot next to this screen</b></h2>
                             <Button onClick={() => this.handleIntensityChange(10)}>More +</Button>
                             <span style={{ margin: "0 10px", fontWeight: "bold" }}>{intensity}%</span>
                             <Button onClick={() => this.handleIntensityChange(-10)}>Less -</Button>
@@ -213,7 +232,7 @@ class App extends Component {
                         </Col>
                         <Col sm={12}><h2>Why did you pick this expression?</h2>
                             <textarea style={{ width: "100%", height: "100px" }} value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
-                            <h2>What would you want Furhat to say?</h2>
+                            <h2>What would you want Furhat to say in response to this scenario along with this expression?</h2>
                             <textarea style={{ width: "100%", height: "100px" }} value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
                             <Button onClick={this.handleNextScreen}>Done</Button>
                         </Col>

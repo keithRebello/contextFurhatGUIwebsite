@@ -8248,10 +8248,25 @@ var App = function (_Component) {
 
         _this.handleBackScreen = function () {
             _this.setState({ currentScreen: "scenarioRating" });
+            _this.furhat.send({
+                event_name: "updateEmotionIntensity",
+                emotion: "Neutral",
+                intensity: 0
+            });
         };
 
         _this.handleEmotionSelect = function (emotion) {
             _this.setState({ selectedEmotion: emotion });
+            _this.furhat.send({
+                event_name: "updateEmotionIntensity",
+                emotion: "Neutral",
+                intensity: 0
+            });
+            _this.furhat.send({
+                event_name: "updateEmotionIntensity",
+                emotion: emotion,
+                intensity: 50
+            });
         };
 
         _this.handleIntensityChange = function (change) {
@@ -8297,7 +8312,7 @@ var App = function (_Component) {
             scenarioEmotion: "",
             scenarioIntensity: 0,
             scenarioText: "",
-            emotionOptions: ["Joy", "Sadness", "Anger", "Surprise", "Disgust", "Fear", "Neutral"],
+            emotionOptions: ["E1", "E2", "E3", "E4", "E5", "E6", "Neutral"],
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
@@ -8390,6 +8405,11 @@ var App = function (_Component) {
                         _react2.default.createElement(
                             "h2",
                             null,
+                            " You will now design Furhat's emotional expressions for six different scenarios.  For each scenario, you will be able to see what each expression will look like on the physical Furhat next to this screen."
+                        ),
+                        _react2.default.createElement(
+                            "h2",
+                            null,
                             "Enter Participant ID:"
                         ),
                         _react2.default.createElement(_reactBootstrap.FormControl, { type: "text", value: participantID, onChange: this.handleParticipantIDChange }),
@@ -8421,6 +8441,17 @@ var App = function (_Component) {
                 currentScreen === "scenarioDisplay" && _react2.default.createElement(
                     _reactBootstrap.Row,
                     null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12 },
+                        _react2.default.createElement(
+                            "h2",
+                            null,
+                            "Scenario: ",
+                            this.state.iteration,
+                            " out of 8"
+                        )
+                    ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { sm: 12 },
@@ -8459,7 +8490,12 @@ var App = function (_Component) {
                         _react2.default.createElement(
                             "h2",
                             null,
-                            "Furhat should respond with which emotion?"
+                            "Furhat should respond with which expression? "
+                        ),
+                        _react2.default.createElement(
+                            "b",
+                            null,
+                            "It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  "
                         ),
                         emotionOptions.map(function (emotion) {
                             return _react2.default.createElement(
@@ -8498,7 +8534,12 @@ var App = function (_Component) {
                             null,
                             "How intense should Furhat's expression of ",
                             this.state.selectedEmotion,
-                            " be?"
+                            " be? ",
+                            _react2.default.createElement(
+                                "b",
+                                null,
+                                "You can view the different intensities on the physical Furhat robot next to this screen"
+                            )
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
@@ -8564,7 +8605,7 @@ var App = function (_Component) {
                         _react2.default.createElement(
                             "h2",
                             null,
-                            "What would you want Furhat to say?"
+                            "What would you want Furhat to say in response to this scenario along with this expression?"
                         ),
                         _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" }, value: question2, onChange: function onChange(e) {
                                 return _this4.handleQuestionChange(e, "question2");
