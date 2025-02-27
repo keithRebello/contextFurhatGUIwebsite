@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FurhatGUI from "furhat-gui";
+import rangeSlider from "./RangeSlider";
 import { Grid, Row, Col, Button, FormControl } from "react-bootstrap";
 
 function shuffle(array) {
@@ -34,6 +35,8 @@ const scenarios = [
 ];
 const shuffledScenarios = shuffle(scenarios);
 
+const emotionOptions = ["E1", "E2", "E3", "E4", "E5", "E6", "Neutral"];
+
 
 class App extends Component {
     constructor(props) {
@@ -45,13 +48,16 @@ class App extends Component {
             scenarioEmotion: "",
             scenarioIntensity: 0,
             scenarioText: "",
-            emotionOptions: ["E1", "E2", "E3", "E4", "E5", "E6", "Neutral"],
+            emotionOptions: shuffle(emotionOptions),
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
             question1: "",
             question2: "",
-            responses: [] // Store user responses
+            responses: [],
+            enteredId: false,
+            triedEmotions: new Set(),
+            movedSlider: false// Store user responses
         };
         this.furhat = null;
     }
@@ -75,6 +81,10 @@ class App extends Component {
         });
     }
 
+    handleQuestionChange = (event, question) => {
+        this.setState({ [question]: event.target.value });
+    };
+
     loadScenario() {
         console.log(shuffledScenarios);
         const scenarioIndex = (this.state.iteration - 1) % scenarios.length;
@@ -92,7 +102,27 @@ class App extends Component {
     }
 
     handleNextScreen = () => {
-        const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID, question1, question2  } = this.state;
+        const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID, question1, question2, triedEmotions, movedSlider, enteredId  } = this.state;
+
+        if (currentScreen === "scenarioRating" && triedEmotions.size < this.state.emotionOptions.length) {
+            alert("Please try all the emotion options before proceeding.");
+            return;
+        }
+
+        if (currentScreen === "participantID" && !enteredId) {
+            alert("Please enter your participant id before proceeding.");
+            return;
+        }
+
+        if (currentScreen === "scenarioScaling" && !movedSlider) {
+            alert("Please move the slider up and down before proceeding.");
+            return;
+        }
+
+        if (currentScreen === "scenarioQuestions" && (question1.trim() === "" || question2.trim() === "")) {
+            alert("Please answer both questions before proceeding.");
+            return;
+        }
 
         if (currentScreen === "participantID") {
             this.setState({ currentScreen: "scenarioDisplay" });
@@ -139,7 +169,14 @@ class App extends Component {
 
 
     handleEmotionSelect = (emotion) => {
-        this.setState({ selectedEmotion: emotion });
+        this.setState(prevState => {
+            const updatedTriedEmotions = new Set(prevState.triedEmotions);
+            updatedTriedEmotions.add(emotion);
+            return {
+                selectedEmotion: emotion,
+                triedEmotions: updatedTriedEmotions
+            };
+        });
         this.furhat.send({
             event_name: "updateEmotionIntensity",
             emotion: "Neutral",
@@ -152,22 +189,21 @@ class App extends Component {
         })
     };
 
-    handleIntensityChange = (change) => {
+    handleIntensityChange = (newValue) => {
         this.setState((prevState) => {
-            let newIntensity = prevState.intensity + change;
-            if (newIntensity > 100) {
+            if (newValue > 100) {
                 alert("The intensity cannot be more than 100%.");
-                newIntensity = 100;
-            } else if (newIntensity < 0) {
+                newValue = 100;
+            } else if (newValue < 0) {
                 alert("The intensity cannot be less than 0%.");
-                newIntensity = 0;
+                newValue = 0;
             }
             this.furhat.send({
                 event_name: "updateEmotionIntensity",
                 emotion: this.state.selectedEmotion,
                 intensity: this.state.intensity
             })
-            return { intensity: newIntensity };
+            return { intensity: newValue, movedSlider: true };
         });
     };
 
@@ -176,7 +212,7 @@ class App extends Component {
     };
 
     handleParticipantIDChange = (event) => {
-        this.setState({ participantID: event.target.value });
+        this.setState({ participantID: event.target.value, enteredId: true});
     };
 
     handleResetIntensity = () => {
@@ -190,7 +226,7 @@ class App extends Component {
 
 
     render() {
-        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, question1, question2 } = this.state;
+        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, question1, question2, triedEmotions, movedSlider, enteredId } = this.state;
 
         return (
             <Grid>
@@ -215,7 +251,7 @@ class App extends Component {
 
                             <h2>Enter Participant ID:</h2>
                             <FormControl type="text" value={participantID} onChange={this.handleParticipantIDChange} />
-                            <Button onClick={this.handleNextScreen}>Next</Button>
+                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: enteredId ? "blue" : "gray" }}>Next</Button>
                         </Col>
                     </Row>
                 )}
@@ -242,11 +278,11 @@ class App extends Component {
                         </Col>
                         <Col sm={12}><h2>Furhat should respond with which expression? </h2>
                             <b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  </b>
-                            {shuffle(emotionOptions).map((emotion) => (
+                            {emotionOptions.map((emotion) => (
                                 <Button key={emotion} onClick={() => this.handleEmotionSelect(emotion)}>{emotion}</Button>
                             ))}
                             <br />
-                            <Button style={{ marginTop: "10px", backgroundColor: "blue", color: "white" }} onClick={this.handleNextScreen}>Next</Button>
+                            <Button style={{ marginTop: "10px", backgroundColor: triedEmotions.size === emotionOptions.length ? "blue" : "gray", color: "white" }} onClick={this.handleNextScreen}>Next</Button>
                         </Col>
                     </Row>
                 )}
@@ -255,13 +291,23 @@ class App extends Component {
                         <Col sm={12}><p>{scenarioText}</p>
                         </Col>
                         <Col sm={12}><h2>How intense should Furhat's expression of {this.state.selectedEmotion} be? <b>You can view the different intensities on the physical Furhat robot next to this screen</b></h2>
-                            <Button onClick={() => this.handleIntensityChange(10)}>More +</Button>
-                            <span style={{ margin: "0 10px", fontWeight: "bold" }}>{intensity}%</span>
-                            <Button onClick={() => this.handleIntensityChange(-10)}>Less -</Button>
+                            <input
+                                type="range"
+                                min="1"
+                                max="100"
+                                value={this.state.intensity}
+                                className="slider"
+                                id="scale"
+                                onChange={(e) => this.handleIntensityChange(parseInt(e.target.value, 10))}
+                            />
+                            {/*<Button onClick={() => this.handleIntensityChange(10)}>More +</Button>*/}
+                            {/*<span style={{ margin: "0 10px", fontWeight: "bold" }}>{intensity}%</span>*/}
+                            {/*<Button onClick={() => this.handleIntensityChange(-10)}>Less -</Button>*/}
                             <br />
                             <Button onClick={this.handleResetIntensity} style={{ marginRight: "10px" }}>Reset</Button>
+                            <br />
                             <Button onClick={this.handleBackScreen} style={{ marginRight: "10px" }}>Back</Button>
-                            <Button onClick={this.handleNextScreen}>Next</Button>
+                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: movedSlider ? "blue" : "gray" }}>Next</Button>
                         </Col>
                     </Row>
                 )}
@@ -273,7 +319,7 @@ class App extends Component {
                             <textarea style={{ width: "100%", height: "100px" }} value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
                             <h2>What would you want Furhat to say in response to this scenario along with this expression?</h2>
                             <textarea style={{ width: "100%", height: "100px" }} value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
-                            <Button onClick={this.handleNextScreen}>Done</Button>
+                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: (question1.trim() && question2.trim()) ? "blue" : "gray" }}>Done</Button>
                         </Col>
                     </Row>
                 )}
