@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import FurhatGUI from "furhat-gui";
-import rangeSlider from "./RangeSlider";
 import { Grid, Row, Col, Button, FormControl } from "react-bootstrap";
 
 function shuffle(array) {
@@ -139,7 +138,7 @@ class App extends Component {
             ];
             if (iteration < 8) {
                 this.setState(
-                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "" },
+                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), movedSlider: false },
                     this.loadScenario
                 );
             } else {
@@ -230,36 +229,43 @@ class App extends Component {
 
         return (
             <Grid>
-                <Row>
-                    <Col sm={12}><h1>Participant Designed Emotion Expressions for Social Robot</h1></Col>
-                </Row>
+                {/*<Row>*/}
+                {/*    <Col sm={12}><h1>Participant Designed Emotion Expressions for Social Robot</h1></Col>*/}
+                {/*</Row>*/}
                 {currentScreen === "participantID" && (
                     <Row>
-                        <Col sm={12}>
-                            <h3> Welcome! </h3>
-                            <p>The robot on your left is <b>Furhat</b>, a humanoid social robot designed to interact with people. In this study, Furhat will take on the role of a <b>peer mentor</b> for adolescents.</p>
-                           <p>Your task is to <b>design Furhat’s empathetic emotional expressions</b>  for six different scenarios that an adolescent will share with the robot during a one-on-one interaction.</p>
+                        <Col sm={12}><h1>Participant Designed Emotion Expressions for Social Robot</h1></Col>
+                        <Col style={{ display: "flex", alignItems: "center" }}>
+                            <img src={"../public/assets/images/leftarrowv2.png"} alt="Left Arrow" style={{ width: "100px", marginRight: "10px" }} />
+                            <div style={{padding: "5px", borderRadius: "5px", fontSize: "14px" }}>
+                                This is Furhat!
+                            </div>
+                        </Col>
+                        <Col>
+                            <h2> Welcome! </h2>
+                            <p>The robot on your left is <b>Furhat</b>, a humanoid social robot designed to interact with people. </p> <p> In the future, we envisage that Furhat can take on the role of a <b>peer mentor</b> for adolescents. </p><p>
+                           Your task is to <b>design Furhat’s empathetic emotional expressions</b>  for six different scenarios that an adolescent will share with the robot during a one-on-one interaction.</p>
                            <p>For each scenario, you will:</p>
                             <ul>
-                                <li><b>Select an emotion</b> that Furhat should express.</li>
-                                <li><b>Adjust the intensity</b> of the emotion to match the situation.</li>
-                                <li><b>See your changes in real time</b> —each time you adjust the emotion or intensity, the Furhat robot will display the updated expression.</li>
+                                <li><b>Select an emotional expression</b> for the Furhat.</li>
+                                <li><b>Adjust the intensity</b> of the emotional expression to match the situation.</li>
+                                <li><b>See your changes in real time</b> —each time you adjust the emotional expression or intensity, the Furhat robot will display the updated expression.</li>
                             </ul>
                             <p>Take your time exploring the different options to create expressions that feel natural and appropriate. </p>
                             <p>When you're ready, proceed to the first scenario!</p>
 
-
-                            <h2>Enter Participant ID:</h2>
+                            <h3>Enter Participant ID:</h3>
                             <FormControl type="text" value={participantID} onChange={this.handleParticipantIDChange} />
-                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: enteredId ? "blue" : "gray" }}>Next</Button>
+                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: enteredId ? "#194051" : "gray" , color: "white" }}>Next</Button>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "done" && (
                     <Row>
                         <Col sm={12}>
-                            <h2>Your responses have been saved successfully. You may now exit the room and inform the researcher.</h2>
-                            <p>Thank you for helping to create Furhat's responses to these scenarios!</p>
+                            <p>Your responses have been saved successfully. You may now exit the room and inform the researcher.</p>
+                            <h2>Thank you for helping to create Furhat's responses to these scenarios!</h2>
+                            <img src={"../public/assets/images/balloons.png"} alt="Balloons" style={{ width: "150px", display: "block", margin: "20px auto" }} />
                         </Col>
                     </Row>
                 )}
@@ -267,30 +273,35 @@ class App extends Component {
                     <Row>
                         <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
                         </Col>
-                        <Col sm={12}><h2>Read the following scenario:</h2><p>{scenarioText}</p>
-                            <Button onClick={this.handleNextScreen}>Done</Button>
+                        <Col sm={12}><h2> Read the following scenario that an adolescent might share with the Furhat:</h2><h2 style={ {color : "#2d765b"}}> <b> " {scenarioText} "</b></h2>
+                            <Button onClick={this.handleNextScreen} style={{ backgroundColor : "#194051" , color: "white"  }}>Done</Button>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioRating" && (
                     <Row>
-                        <Col sm={12}><p>{scenarioText}</p>
+                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
                         </Col>
-                        <Col sm={12}><h2>Furhat should respond with which expression? </h2>
-                            <b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  </b>
+                        <Col sm={12}><h2>{scenarioText}</h2>
+                        </Col>
+                        <Col sm={12}><h3>Furhat should respond with which expression? </h3>
+                            <p><b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  </b></p>
                             {emotionOptions.map((emotion) => (
                                 <Button key={emotion} onClick={() => this.handleEmotionSelect(emotion)}>{emotion}</Button>
                             ))}
                             <br />
-                            <Button style={{ marginTop: "10px", backgroundColor: triedEmotions.size === emotionOptions.length ? "blue" : "gray", color: "white" }} onClick={this.handleNextScreen}>Next</Button>
+                            <Button style={{ marginTop: "10px", backgroundColor: triedEmotions.size === emotionOptions.length ? "#194051" : "gray", color: "white" }} onClick={this.handleNextScreen}>Next</Button>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioScaling" && (
                     <Row>
-                        <Col sm={12}><p>{scenarioText}</p>
+                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
                         </Col>
-                        <Col sm={12}><h2>How intense should Furhat's expression of {this.state.selectedEmotion} be? <b>You can view the different intensities on the physical Furhat robot next to this screen</b></h2>
+
+                        <Col sm={12}><h2>{scenarioText}</h2>
+                        </Col>
+                        <Col sm={12}><h3>How intense should Furhat's expression of {this.state.selectedEmotion} be? <b>You can view the different intensities on the physical Furhat robot next to this screen</b></h3>
                             <input
                                 type="range"
                                 min="1"
@@ -300,26 +311,29 @@ class App extends Component {
                                 id="scale"
                                 onChange={(e) => this.handleIntensityChange(parseInt(e.target.value, 10))}
                             />
-                            {/*<Button onClick={() => this.handleIntensityChange(10)}>More +</Button>*/}
-                            {/*<span style={{ margin: "0 10px", fontWeight: "bold" }}>{intensity}%</span>*/}
-                            {/*<Button onClick={() => this.handleIntensityChange(-10)}>Less -</Button>*/}
                             <br />
-                            <Button onClick={this.handleResetIntensity} style={{ marginRight: "10px" }}>Reset</Button>
-                            <br />
-                            <Button onClick={this.handleBackScreen} style={{ marginRight: "10px" }}>Back</Button>
-                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: movedSlider ? "blue" : "gray" }}>Next</Button>
+                            <Col sm={12} style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
+                                <Button onClick={this.handleResetIntensity}>Reset</Button>
+                            </Col>
+                            <Col sm={12} style={{ display: "flex", justifyContent: "space-between", marginTop: "10px"}}>
+                                <Button onClick={this.handleBackScreen} style={{ backgroundColor : "#194051" , color: "white"  }}>Back</Button>
+                                <Button onClick={this.handleNextScreen} style={{ backgroundColor: movedSlider ? "#194051" : "gray" , color: "white" }}>Next</Button>
+                            </Col>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioQuestions" && (
                     <Row>
-                        <Col sm={12}><p>{scenarioText}</p>
+                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
                         </Col>
-                        <Col sm={12}><h2>Why did you pick this expression?</h2>
+
+                        <Col sm={12}><h2>{scenarioText}</h2>
+                        </Col>
+                        <Col sm={12}><h3>Why did you pick this expression?</h3>
                             <textarea style={{ width: "100%", height: "100px" }} value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
-                            <h2>What would you want Furhat to say in response to this scenario along with this expression?</h2>
+                            <h3>What would you want Furhat to say in response to this scenario along with this expression?</h3>
                             <textarea style={{ width: "100%", height: "100px" }} value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
-                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: (question1.trim() && question2.trim()) ? "blue" : "gray" }}>Done</Button>
+                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: (question1.trim() && question2.trim()) ? "blue" : "gray" , color: "white" }}>Done</Button>
                         </Col>
                     </Row>
                 )}

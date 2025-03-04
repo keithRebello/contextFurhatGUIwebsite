@@ -8,7 +8,7 @@
 html, body {
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #EBE7E0;
+    background: white;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,18 +32,31 @@ html, body {
 }
 
 /* Headings */
-h1, h2, h3 {
+h1 {
+    font-weight: 400;
+    font-size: 24px;
+    color: #244e74;
+    margin-bottom: 15px;
+}
+
+h2 {
     font-weight: 400;
     font-size: 22px;
     color: #44749D;
     margin-bottom: 15px;
 }
 
-/* Paragraphs */
-p {
-    font-size: 16px;
-    font-weight: 600;
+h3 {
+    font-weight: 400;
+    font-size: 20px;
     color: #44749D;
+    margin-bottom: 15px;
+}
+/* Paragraphs */
+p, li, ul {
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
     line-height: 1.5;
     margin-bottom: 15px;
 }
@@ -62,7 +75,6 @@ p {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
-    margin: 10px;
 }
 
 .button:hover {
