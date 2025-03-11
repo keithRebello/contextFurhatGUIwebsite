@@ -34,7 +34,7 @@ const scenarios = [
 ];
 const shuffledScenarios = shuffle(scenarios);
 
-const emotionOptions = ["E1", "E2", "E3", "E4", "E5", "E6", "Neutral"];
+const emotionOptions = ["Expression 1", "Expression 2", "Expression 3", "Expression 4", "Expression 5", "Expression 6"];
 
 
 class App extends Component {
@@ -103,8 +103,8 @@ class App extends Component {
     handleNextScreen = () => {
         const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID, question1, question2, triedEmotions, movedSlider, enteredId  } = this.state;
 
-        if (currentScreen === "scenarioRating" && triedEmotions.size < this.state.emotionOptions.length) {
-            alert("Please try all the emotion options before proceeding.");
+        if (currentScreen === "scenarioRating" && triedEmotions.size < this.state.emotionOptions.length + 1) {
+            alert("Please try all the expressions options before proceeding.");
             return;
         }
 
@@ -230,18 +230,15 @@ class App extends Component {
         return (
             <Grid>
                 {/*<Row>*/}
-                {/*    <Col sm={12}><h1>Participant Designed Emotion Expressions for Social Robot</h1></Col>*/}
+                {/*    <Col sm={12} className="title-container"><h1>Participant Designed Emotion Expressions for Social Robot</h1></Col>*/}
                 {/*</Row>*/}
                 {currentScreen === "participantID" && (
-                    <Row>
-                        <Col sm={12}><h1>Participant Designed Emotion Expressions for Social Robot</h1></Col>
-                        <Col style={{ display: "flex", alignItems: "center" }}>
-                            <img src={"../public/assets/images/leftarrowv2.png"} alt="Left Arrow" style={{ width: "100px", marginRight: "10px" }} />
-                            <div style={{padding: "5px", borderRadius: "5px", fontSize: "14px" }}>
-                                This is Furhat!
-                            </div>
+                    <Row className="participant-id-container">
+                        <Col sm={4} className="furhat-image-container">
+                            <div className="furhat-label">This is Furhat!</div>
+                            <img src="../public/assets/images/leftarrowv2.png" alt="Left Arrow" className="furhat-image" />
                         </Col>
-                        <Col>
+                        <Col sm={8} className="text-box">
                             <h2> Welcome! </h2>
                             <p>The robot on your left is <b>Furhat</b>, a humanoid social robot designed to interact with people. </p> <p> In the future, we envisage that Furhat can take on the role of a <b>peer mentor</b> for adolescents. </p><p>
                            Your task is to <b>design Furhat’s empathetic emotional expressions</b>  for six different scenarios that an adolescent will share with the robot during a one-on-one interaction.</p>
@@ -256,52 +253,63 @@ class App extends Component {
 
                             <h3>Enter Participant ID:</h3>
                             <FormControl type="text" value={participantID} onChange={this.handleParticipantIDChange} />
-                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: enteredId ? "#194051" : "gray" , color: "white" }}>Next</Button>
+
+                            <div className="button-container">
+                                <Button onClick={this.handleNextScreen} className="next-button"  style={{ backgroundColor: enteredId ? "#194051" : "gray" }}>Next</Button>
+                            </div>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "done" && (
-                    <Row>
-                        <Col sm={12}>
+                    <Row className="done-screen">
+                        <Col sm={12} className="done-text">
                             <p>Your responses have been saved successfully. You may now exit the room and inform the researcher.</p>
-                            <h2>Thank you for helping to create Furhat's responses to these scenarios!</h2>
+                            <h2>Thank you for helping create Furhat's responses to these scenarios!</h2>
                             <img src={"../public/assets/images/balloons.png"} alt="Balloons" style={{ width: "150px", display: "block", margin: "20px auto" }} />
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioDisplay" && (
-                    <Row>
-                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
-                        </Col>
-                        <Col sm={12}><h2> Read the following scenario that an adolescent might share with the Furhat:</h2><h2 style={ {color : "#2d765b"}}> <b> " {scenarioText} "</b></h2>
-                            <Button onClick={this.handleNextScreen} style={{ backgroundColor : "#194051" , color: "white"  }}>Done</Button>
+                    <Row className="scenario-display">
+                        <Col sm={12} className="scenario-text"><h2 className="scenario-out-of">Scenario: {this.state.iteration} out of 8</h2>
+                        <h2> Read the following scenario that an adolescent might share with the Furhat:</h2><h2 className="scenario-text">" {scenarioText} "</h2>
+                            </Col>
+                        <Col sm={12} className="button-container">
+                            <Button onClick={this.handleNextScreen} className="next-button" >Done</Button>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioRating" && (
-                    <Row>
-                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
+                    <Row className="scenario-rating">
+                        <Col sm={8} className="scenario-text"><h2 className="scenario-out-of">Scenario: {this.state.iteration} out of 8</h2>
+                        <h2>" {scenarioText} "</h2>
                         </Col>
-                        <Col sm={12}><h2>{scenarioText}</h2>
-                        </Col>
-                        <Col sm={12}><h3>Furhat should respond with which expression? </h3>
-                            <p><b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  </b></p>
+                        <Col sm={12} className="emotion-options"><h3>Furhat should respond with which expression? </h3>
+                            <p><b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please view all of the options below by clicking on them and choose one before proceeding.  </b></p>
+                            <div className="button-grid">
                             {emotionOptions.map((emotion) => (
-                                <Button key={emotion} onClick={() => this.handleEmotionSelect(emotion)}>{emotion}</Button>
+                                <Button key={emotion}  onClick={() => this.handleEmotionSelect(emotion) }>{emotion}</Button>
                             ))}
-                            <br />
-                            <Button style={{ marginTop: "10px", backgroundColor: triedEmotions.size === emotionOptions.length ? "#194051" : "gray", color: "white" }} onClick={this.handleNextScreen}>Next</Button>
+                            </div>
+
+                            <Button className= "reset-button" onClick={() => this.handleEmotionSelect("Neutral")}>Neutral Expression</Button>
+
+                            <div className="next-button-container">
+                                <Button className="next-button" style={{ backgroundColor: triedEmotions.size === emotionOptions.length + 1 ? "#194051" : "gray" }} onClick={this.handleNextScreen}>Next</Button>
+                            </div>
+
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioScaling" && (
-                    <Row>
-                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
+                    <Row className="scenario-scaling">
+                        <Col sm={8} className="scenario-text">
+                        <h2 className="scenario-out-of">Scenario: {this.state.iteration} out of 8</h2>
+                        <h2 >"{scenarioText}"</h2>
                         </Col>
-
-                        <Col sm={12}><h2>{scenarioText}</h2>
-                        </Col>
-                        <Col sm={12}><h3>How intense should Furhat's expression of {this.state.selectedEmotion} be? <b>You can view the different intensities on the physical Furhat robot next to this screen</b></h3>
+                        <Col sm={12} className="scaling-container"><h3>How intense should {this.state.selectedEmotion} be? <b>You can view the different intensities on the Furhat robot next to this screen</b></h3>
+                            <div className="slider-container">
+                            <span>Very Low</span>
                             <input
                                 type="range"
                                 min="1"
@@ -311,29 +319,31 @@ class App extends Component {
                                 id="scale"
                                 onChange={(e) => this.handleIntensityChange(parseInt(e.target.value, 10))}
                             />
-                            <br />
-                            <Col sm={12} style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
-                                <Button onClick={this.handleResetIntensity}>Reset</Button>
-                            </Col>
-                            <Col sm={12} style={{ display: "flex", justifyContent: "space-between", marginTop: "10px"}}>
-                                <Button onClick={this.handleBackScreen} style={{ backgroundColor : "#194051" , color: "white"  }}>Back</Button>
-                                <Button onClick={this.handleNextScreen} style={{ backgroundColor: movedSlider ? "#194051" : "gray" , color: "white" }}>Next</Button>
-                            </Col>
+                            <span>Very High</span>
+                            </div>
+
+                            <Button onClick={this.handleResetIntensity} className="reset-button">Reset</Button>
+
+                            <div className="navigation-buttons">
+                                <Button onClick={this.handleBackScreen} className="back-button">Back</Button>
+                                <Button onClick={this.handleNextScreen} className="next-button" style={{ backgroundColor: movedSlider ? "#194051" : "gray" }}>Finalize</Button>
+                            </div>
                         </Col>
                     </Row>
                 )}
                 {currentScreen === "scenarioQuestions" && (
-                    <Row>
-                        <Col sm={12}><h2>Scenario: {this.state.iteration} out of 8</h2>
+                    <Row className="scenario-questions">
+                        <Col sm={8} className="scenario-text"><h2 className="scenario-out-of">Scenario: {this.state.iteration} out of 8</h2>
+                        <h2>"{scenarioText}"</h2>
                         </Col>
-
-                        <Col sm={12}><h2>{scenarioText}</h2>
-                        </Col>
-                        <Col sm={12}><h3>Why did you pick this expression?</h3>
-                            <textarea style={{ width: "100%", height: "100px" }} value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
+                        <Col sm={12} className="question-container"><h3>Why did you pick this expression?</h3>
+                            <textarea className="text-area" value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
                             <h3>What would you want Furhat to say in response to this scenario along with this expression?</h3>
-                            <textarea style={{ width: "100%", height: "100px" }} value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
-                            <Button onClick={this.handleNextScreen} style={{ backgroundColor: (question1.trim() && question2.trim()) ? "blue" : "gray" , color: "white" }}>Done</Button>
+                            <textarea className="text-area" value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
+
+                            <div className="done-button-container">
+                                <Button onClick={this.handleNextScreen} className="next-button"  style={{ backgroundColor: (question1.trim() && question2.trim()) ? "#194051" : "gray"}}>Done</Button>
+                            </div>
                         </Col>
                     </Row>
                 )}

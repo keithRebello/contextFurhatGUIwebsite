@@ -8224,7 +8224,7 @@ function shuffle(array) {
 var scenarios = [{ emotion: "Joy", intensity: "100", text: " I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. " }, { emotion: "Sadness", intensity: "0", text: "I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  " }, { emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down. " }, { emotion: "Fear", intensity: "100", text: " I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely. " }, { emotion: "Disgust", intensity: "0", text: " I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { emotion: "Joy", intensity: "0", text: " My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside. " }, { emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special. " }, { emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair.  " }];
 var shuffledScenarios = shuffle(scenarios);
 
-var emotionOptions = ["E1", "E2", "E3", "E4", "E5", "E6", "Neutral"];
+var emotionOptions = ["Expression 1", "Expression 2", "Expression 3", "Expression 4", "Expression 5", "Expression 6"];
 
 var App = function (_Component) {
     _inherits(App, _Component);
@@ -8253,8 +8253,8 @@ var App = function (_Component) {
                 enteredId = _this$state.enteredId;
 
 
-            if (currentScreen === "scenarioRating" && triedEmotions.size < _this.state.emotionOptions.length) {
-                alert("Please try all the emotion options before proceeding.");
+            if (currentScreen === "scenarioRating" && triedEmotions.size < _this.state.emotionOptions.length + 1) {
+                alert("Please try all the expressions options before proceeding.");
                 return;
             }
 
@@ -8314,6 +8314,7 @@ var App = function (_Component) {
             _this.setState(function (prevState) {
                 var updatedTriedEmotions = new Set(prevState.triedEmotions);
                 updatedTriedEmotions.add(emotion);
+                emotion.target.style.color = '#194051';
                 return {
                     selectedEmotion: emotion,
                     triedEmotions: updatedTriedEmotions
@@ -8452,29 +8453,20 @@ var App = function (_Component) {
                 null,
                 currentScreen === "participantID" && _react2.default.createElement(
                     _reactBootstrap.Row,
-                    null,
+                    { className: "participant-id-container" },
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
-                        _react2.default.createElement(
-                            "h1",
-                            null,
-                            "Participant Designed Emotion Expressions for Social Robot"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.Col,
-                        { style: { display: "flex", alignItems: "center" } },
-                        _react2.default.createElement("img", { src: "../public/assets/images/leftarrowv2.png", alt: "Left Arrow", style: { width: "100px", marginRight: "10px" } }),
+                        { sm: 4, className: "furhat-image-container" },
                         _react2.default.createElement(
                             "div",
-                            { style: { padding: "5px", borderRadius: "5px", fontSize: "14px" } },
+                            { className: "furhat-label" },
                             "This is Furhat!"
-                        )
+                        ),
+                        _react2.default.createElement("img", { src: "../public/assets/images/leftarrowv2.png", alt: "Left Arrow", className: "furhat-image" })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        null,
+                        { sm: 8, className: "text-box" },
                         _react2.default.createElement(
                             "h2",
                             null,
@@ -8570,18 +8562,22 @@ var App = function (_Component) {
                         ),
                         _react2.default.createElement(_reactBootstrap.FormControl, { type: "text", value: participantID, onChange: this.handleParticipantIDChange }),
                         _react2.default.createElement(
-                            _reactBootstrap.Button,
-                            { onClick: this.handleNextScreen, style: { backgroundColor: enteredId ? "#194051" : "gray", color: "white" } },
-                            "Next"
+                            "div",
+                            { className: "button-container" },
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.handleNextScreen, className: "next-button", style: { backgroundColor: enteredId ? "#194051" : "gray" } },
+                                "Next"
+                            )
                         )
                     )
                 ),
                 currentScreen === "done" && _react2.default.createElement(
                     _reactBootstrap.Row,
-                    null,
+                    { className: "done-screen" },
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 12, className: "done-text" },
                         _react2.default.createElement(
                             "p",
                             null,
@@ -8590,28 +8586,24 @@ var App = function (_Component) {
                         _react2.default.createElement(
                             "h2",
                             null,
-                            "Thank you for helping to create Furhat's responses to these scenarios!"
+                            "Thank you for helping create Furhat's responses to these scenarios!"
                         ),
                         _react2.default.createElement("img", { src: "../public/assets/images/balloons.png", alt: "Balloons", style: { width: "150px", display: "block", margin: "20px auto" } })
                     )
                 ),
                 currentScreen === "scenarioDisplay" && _react2.default.createElement(
                     _reactBootstrap.Row,
-                    null,
+                    { className: "scenario-display" },
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 12, className: "scenario-text" },
                         _react2.default.createElement(
                             "h2",
-                            null,
+                            { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
                             " out of 8"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.Col,
-                        { sm: 12 },
+                        ),
                         _react2.default.createElement(
                             "h2",
                             null,
@@ -8619,49 +8611,46 @@ var App = function (_Component) {
                         ),
                         _react2.default.createElement(
                             "h2",
-                            { style: { color: "#2d765b" } },
-                            " ",
-                            _react2.default.createElement(
-                                "b",
-                                null,
-                                " \" ",
-                                scenarioText,
-                                " \""
-                            )
-                        ),
+                            { className: "scenario-text" },
+                            "\" ",
+                            scenarioText,
+                            " \""
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12, className: "button-container" },
                         _react2.default.createElement(
                             _reactBootstrap.Button,
-                            { onClick: this.handleNextScreen, style: { backgroundColor: "#194051", color: "white" } },
+                            { onClick: this.handleNextScreen, className: "next-button" },
                             "Done"
                         )
                     )
                 ),
                 currentScreen === "scenarioRating" && _react2.default.createElement(
                     _reactBootstrap.Row,
-                    null,
+                    { className: "scenario-rating" },
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 8, className: "scenario-text" },
                         _react2.default.createElement(
                             "h2",
-                            null,
+                            { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
                             " out of 8"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.Col,
-                        { sm: 12 },
+                        ),
                         _react2.default.createElement(
                             "h2",
                             null,
-                            scenarioText
+                            "\" ",
+                            scenarioText,
+                            " \""
                         )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 12, className: "emotion-options" },
                         _react2.default.createElement(
                             "h3",
                             null,
@@ -8673,133 +8662,152 @@ var App = function (_Component) {
                             _react2.default.createElement(
                                 "b",
                                 null,
-                                "It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please check all of the options below.  "
+                                "It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please view all of the options below by clicking on them and choose one before proceeding.  "
                             )
                         ),
-                        emotionOptions.map(function (emotion) {
-                            return _react2.default.createElement(
-                                _reactBootstrap.Button,
-                                { key: emotion, onClick: function onClick() {
-                                        return _this4.handleEmotionSelect(emotion);
-                                    } },
-                                emotion
-                            );
-                        }),
-                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "button-grid" },
+                            emotionOptions.map(function (emotion) {
+                                return _react2.default.createElement(
+                                    _reactBootstrap.Button,
+                                    { key: emotion, onClick: function onClick() {
+                                            return _this4.handleEmotionSelect(emotion);
+                                        } },
+                                    emotion
+                                );
+                            })
+                        ),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
-                            { style: { marginTop: "10px", backgroundColor: triedEmotions.size === emotionOptions.length ? "#194051" : "gray", color: "white" }, onClick: this.handleNextScreen },
-                            "Next"
+                            { className: "reset-button", onClick: function onClick() {
+                                    return _this4.handleEmotionSelect("Neutral");
+                                } },
+                            "Neutral Expression"
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "next-button-container" },
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { className: "next-button", style: { backgroundColor: triedEmotions.size === emotionOptions.length + 1 ? "#194051" : "gray" }, onClick: this.handleNextScreen },
+                                "Next"
+                            )
                         )
                     )
                 ),
                 currentScreen === "scenarioScaling" && _react2.default.createElement(
                     _reactBootstrap.Row,
-                    null,
+                    { className: "scenario-scaling" },
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 8, className: "scenario-text" },
                         _react2.default.createElement(
                             "h2",
-                            null,
+                            { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
                             " out of 8"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.Col,
-                        { sm: 12 },
+                        ),
                         _react2.default.createElement(
                             "h2",
                             null,
-                            scenarioText
+                            "\"",
+                            scenarioText,
+                            "\""
                         )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 12, className: "scaling-container" },
                         _react2.default.createElement(
                             "h3",
                             null,
-                            "How intense should Furhat's expression of ",
+                            "How intense should ",
                             this.state.selectedEmotion,
                             " be? ",
                             _react2.default.createElement(
                                 "b",
                                 null,
-                                "You can view the different intensities on the physical Furhat robot next to this screen"
-                            )
-                        ),
-                        _react2.default.createElement("input", {
-                            type: "range",
-                            min: "1",
-                            max: "100",
-                            value: this.state.intensity,
-                            className: "slider",
-                            id: "scale",
-                            onChange: function onChange(e) {
-                                return _this4.handleIntensityChange(parseInt(e.target.value, 10));
-                            }
-                        }),
-                        _react2.default.createElement("br", null),
-                        _react2.default.createElement(
-                            _reactBootstrap.Col,
-                            { sm: 12, style: { display: "flex", justifyContent: "center", marginTop: "10px" } },
-                            _react2.default.createElement(
-                                _reactBootstrap.Button,
-                                { onClick: this.handleResetIntensity },
-                                "Reset"
+                                "You can view the different intensities on the Furhat robot next to this screen"
                             )
                         ),
                         _react2.default.createElement(
-                            _reactBootstrap.Col,
-                            { sm: 12, style: { display: "flex", justifyContent: "space-between", marginTop: "10px" } },
+                            "div",
+                            { className: "slider-container" },
+                            _react2.default.createElement(
+                                "span",
+                                null,
+                                "Very Low"
+                            ),
+                            _react2.default.createElement("input", {
+                                type: "range",
+                                min: "1",
+                                max: "100",
+                                value: this.state.intensity,
+                                className: "slider",
+                                id: "scale",
+                                onChange: function onChange(e) {
+                                    return _this4.handleIntensityChange(parseInt(e.target.value, 10));
+                                }
+                            }),
+                            _react2.default.createElement(
+                                "span",
+                                null,
+                                "Very High"
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
+                            { onClick: this.handleResetIntensity, className: "reset-button" },
+                            "Reset"
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "navigation-buttons" },
                             _react2.default.createElement(
                                 _reactBootstrap.Button,
-                                { onClick: this.handleBackScreen, style: { backgroundColor: "#194051", color: "white" } },
+                                { onClick: this.handleBackScreen, className: "back-button" },
                                 "Back"
                             ),
                             _react2.default.createElement(
                                 _reactBootstrap.Button,
-                                { onClick: this.handleNextScreen, style: { backgroundColor: movedSlider ? "#194051" : "gray", color: "white" } },
-                                "Next"
+                                { onClick: this.handleNextScreen, className: "next-button", style: { backgroundColor: movedSlider ? "#194051" : "gray" } },
+                                "Finalize"
                             )
                         )
                     )
                 ),
                 currentScreen === "scenarioQuestions" && _react2.default.createElement(
                     _reactBootstrap.Row,
-                    null,
+                    { className: "scenario-questions" },
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 8, className: "scenario-text" },
                         _react2.default.createElement(
                             "h2",
-                            null,
+                            { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
                             " out of 8"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.Col,
-                        { sm: 12 },
+                        ),
                         _react2.default.createElement(
                             "h2",
                             null,
-                            scenarioText
+                            "\"",
+                            scenarioText,
+                            "\""
                         )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { sm: 12 },
+                        { sm: 12, className: "question-container" },
                         _react2.default.createElement(
                             "h3",
                             null,
                             "Why did you pick this expression?"
                         ),
-                        _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" }, value: question1, onChange: function onChange(e) {
+                        _react2.default.createElement("textarea", { className: "text-area", value: question1, onChange: function onChange(e) {
                                 return _this4.handleQuestionChange(e, "question1");
                             } }),
                         _react2.default.createElement(
@@ -8807,13 +8815,17 @@ var App = function (_Component) {
                             null,
                             "What would you want Furhat to say in response to this scenario along with this expression?"
                         ),
-                        _react2.default.createElement("textarea", { style: { width: "100%", height: "100px" }, value: question2, onChange: function onChange(e) {
+                        _react2.default.createElement("textarea", { className: "text-area", value: question2, onChange: function onChange(e) {
                                 return _this4.handleQuestionChange(e, "question2");
                             } }),
                         _react2.default.createElement(
-                            _reactBootstrap.Button,
-                            { onClick: this.handleNextScreen, style: { backgroundColor: question1.trim() && question2.trim() ? "blue" : "gray", color: "white" } },
-                            "Done"
+                            "div",
+                            { className: "done-button-container" },
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.handleNextScreen, className: "next-button", style: { backgroundColor: question1.trim() && question2.trim() ? "#194051" : "gray" } },
+                                "Done"
+                            )
                         )
                     )
                 )

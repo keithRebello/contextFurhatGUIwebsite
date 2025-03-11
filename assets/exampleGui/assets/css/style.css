@@ -10,112 +10,259 @@ html, body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: white;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Centering all screens */
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+
+/* Title Styling */
+.title-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #244e74;
+    margin-bottom: 20px;
+}
+
+/* Participant ID Screen */
+.participant-id-container {
+    display: flex;
     align-items: center;
     justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    column-gap: 20px;
 }
 
-/* App Container */
-.appContainer {
-    width: 90%;
-    max-width: 800px;
-    min-height: 80vh;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Sections */
-.section {
-    padding: 20px;
-    text-align: center;
-}
-
-/* Headings */
-h1 {
-    font-weight: 400;
-    font-size: 24px;
-    color: #244e74;
-    margin-bottom: 15px;
-}
-
-h2 {
-    font-weight: 400;
-    font-size: 22px;
-    color: #44749D;
-    margin-bottom: 15px;
-}
-
-h3 {
-    font-weight: 400;
-    font-size: 20px;
-    color: #44749D;
-    margin-bottom: 15px;
-}
-/* Paragraphs */
-p, li, ul {
-    font-size: 18px;
-    font-weight: 600;
-    color: black;
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-/* Buttons */
-.button {
-    display: inline-block;
-    width: 200px;
-    height: 50px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    background: #44749D;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-
-.button:hover {
-    background: #365f7d;
-    transform: translateY(-2px);
-}
-
-.button:active {
-    background: #2b4c66;
-    transform: translateY(1px);
-}
-
-/* Form Elements */
-input[type="text"], textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    color: #333;
-    background: #f9f9f9;
-    outline: none;
-    transition: border 0.3s;
-}
-
-input[type="text"]:focus, textarea:focus {
-    border-color: #44749D;
-    background: white;
-}
-
-/* Flex Layout for Scaling Controls */
-.scale-controls {
+.furhat-image-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.furhat-image {
+    width: 250px;
+}
+
+.furhat-label {
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 30px;
+    margin-top: 5px;
+}
+
+.text-box {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    color: #244e74;
+    background: #eef2f5;
+    padding: 30px;
+    border-radius: 10px;
+
+}
+
+.participant-input {
+    margin-top: 10px;
+}
+
+/* Scenario Display */
+.scenario-display {
+    text-align: center;
+}
+
+.scenario-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 45px;
+    font-weight: bold;
+    color: #2d765b;
+    margin-bottom: 20px;
+    background: #d6e7df;
+    padding: 22px;
+    border-radius: 10px;
+}
+
+.scenario-out-of {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2d765b;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-content: flex-end;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+/* Scenario Rating */
+.scenario-rating {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    color: #244e74;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    column-gap: 20px;
+    flex: 1;
+    height: 90%;
+
+}
+
+.emotion-options {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-top: 15px;
+    padding: 20px;
+    background: #eef2f5;
+    border-radius: 10px;
 }
 
-.scale-value {
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+
+.next-button-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Scenario Scaling */
+.scenario-scaling {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 20px;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 18px;
+    color: #244e74;
+
+}
+
+.scaling-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: #eef2f5;
+    border-radius: 10px;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reset-button {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.back-button {
+    background-color: #194051;
+    color: white;
+}
+
+.next-button {
+    background-color: #194051;
+    color: white;
+}
+
+.next-button.disabled {
+    background-color: gray;
+}
+
+/* Scenario Questions */
+.scenario-questions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 20px;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    color: #244e74;
+}
+
+.question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background: #eef2f5;
+    border-radius: 10px;
+    margin-bottom: 60px;
+}
+
+.text-area {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.done-button-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    margin-top: 20px;
+}
+
+/* Done Screen */
+.done-screen {
+    text-align: center;
+    padding: 20px;
+    background: #eef2f5;
+    border-radius: 10px;
+    font-size: 18px;
+    color: #244e74;
+}
+
+.done-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
     font-weight: bold;
-    color: #44749D;
+    color: #244e74;
+    padding: 22px;
+}
+
+.done-image {
+    width: 200px;
+    margin-top: 20px;
 }
