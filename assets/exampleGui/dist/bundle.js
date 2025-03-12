@@ -8273,6 +8273,11 @@ var App = function (_Component) {
                 return;
             }
 
+            if (currentScreen === "SurveyScreen") {
+                _this.setState({ currentScreen: "done" });
+                return;
+            }
+
             if (currentScreen === "participantID") {
                 _this.setState({ currentScreen: "scenarioDisplay" });
             } else if (currentScreen === "scenarioDisplay") {
@@ -8283,15 +8288,19 @@ var App = function (_Component) {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
                 var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity, question1: question1, question2: question2 }]);
-                if (iteration < 8) {
+                if (iteration < 2) {
                     _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), movedSlider: false }, _this.loadScenario);
                 } else {
-                    _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
-                        _this.downloadJSON(participantID + ".json", updatedResponses);
-                    });
-                    _this.furhat.send({
-                        event_name: "endingScreen"
-                    });
+                    if (iteration === 2) {
+                        _this.setState({ iteration: iteration + 1, currentScreen: "SurveyScreen" });
+                    } else {
+                        _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
+                            _this.downloadJSON(participantID + ".json", updatedResponses);
+                        });
+                        _this.furhat.send({
+                            event_name: "endingScreen"
+                        });
+                    }
                 }
                 _this.furhat.send({
                     event_name: "updateEmotionIntensity",
@@ -8314,7 +8323,6 @@ var App = function (_Component) {
             _this.setState(function (prevState) {
                 var updatedTriedEmotions = new Set(prevState.triedEmotions);
                 updatedTriedEmotions.add(emotion);
-                emotion.target.style.color = '#194051';
                 return {
                     selectedEmotion: emotion,
                     triedEmotions: updatedTriedEmotions
@@ -8443,6 +8451,7 @@ var App = function (_Component) {
                 participantID = _state.participantID,
                 question1 = _state.question1,
                 question2 = _state.question2,
+                selectedEmotion = _state.selectedEmotion,
                 triedEmotions = _state.triedEmotions,
                 movedSlider = _state.movedSlider,
                 enteredId = _state.enteredId;
@@ -8572,6 +8581,29 @@ var App = function (_Component) {
                         )
                     )
                 ),
+                currentScreen === "SurveyScreen" && _react2.default.createElement(
+                    _reactBootstrap.Row,
+                    { className: "done-screen" },
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 12, className: "done-text" },
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            "Your responses have been saved successfully. Please now complete the survey by clicking the link below. Once you are done, you can complete this study by clicking the \"done\" button."
+                        ),
+                        _react2.default.createElement(
+                            "a",
+                            { href: "google.com", target: "_blank", rel: "noopener noreferrer" },
+                            "Click here to take the survey"
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
+                            { onClick: this.handleNextScreen, className: "next-button" },
+                            "Done"
+                        )
+                    )
+                ),
                 currentScreen === "done" && _react2.default.createElement(
                     _reactBootstrap.Row,
                     { className: "done-screen" },
@@ -8671,7 +8703,7 @@ var App = function (_Component) {
                             emotionOptions.map(function (emotion) {
                                 return _react2.default.createElement(
                                     _reactBootstrap.Button,
-                                    { key: emotion, onClick: function onClick() {
+                                    { className: selectedEmotion === emotion ? "selected" : "", key: emotion, onClick: function onClick() {
                                             return _this4.handleEmotionSelect(emotion);
                                         } },
                                     emotion

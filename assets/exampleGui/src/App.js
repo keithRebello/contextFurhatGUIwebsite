@@ -123,6 +123,11 @@ class App extends Component {
             return;
         }
 
+        if (currentScreen === "SurveyScreen") {
+            this.setState({ currentScreen: "done" });
+            return;
+        }
+
         if (currentScreen === "participantID") {
             this.setState({ currentScreen: "scenarioDisplay" });
         } else if (currentScreen === "scenarioDisplay") {
@@ -142,12 +147,18 @@ class App extends Component {
                     this.loadScenario
                 );
             } else {
-                this.setState({ currentScreen: "done", responses: updatedResponses }, () => {
-                    this.downloadJSON(`${participantID}.json`, updatedResponses);
-                });
-                this.furhat.send({
-                    event_name: "endingScreen"
-                });
+                if (iteration === 8){
+                    this.setState(
+                        { iteration: iteration + 1, currentScreen: "SurveyScreen"}
+                    );
+                }else {
+                    this.setState({currentScreen: "done", responses: updatedResponses}, () => {
+                        this.downloadJSON(`${participantID}.json`, updatedResponses);
+                    });
+                    this.furhat.send({
+                        event_name: "endingScreen"
+                    });
+                }
             }
             this.furhat.send({
                 event_name: "updateEmotionIntensity",
@@ -225,7 +236,7 @@ class App extends Component {
 
 
     render() {
-        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, question1, question2, triedEmotions, movedSlider, enteredId } = this.state;
+        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, question1, question2, selectedEmotion,triedEmotions, movedSlider, enteredId } = this.state;
 
         return (
             <Grid>
@@ -260,6 +271,19 @@ class App extends Component {
                         </Col>
                     </Row>
                 )}
+                {currentScreen === "SurveyScreen" && (
+                    <Row className="done-screen">
+                        <Col sm={12} className="done-text">
+                            <p>Your responses have been saved successfully. Please now complete the survey by clicking the link below. Once you are done, you can complete this study by clicking the "done" button.</p>
+                            <a href ="google.com" target="_blank" rel="noopener noreferrer">
+                                Click here to take the survey
+                            </a>
+                            <div className="button-container">
+                                <Button onClick={this.handleNextScreen} className="next-button" >Done</Button>
+                            </div>
+                        </Col>
+                    </Row>
+                )}
                 {currentScreen === "done" && (
                     <Row className="done-screen">
                         <Col sm={12} className="done-text">
@@ -288,7 +312,7 @@ class App extends Component {
                             <p><b>It is important that you check the different emotional expressions on the physical Furhat robot next to this screen. Please view all of the options below by clicking on them and choose one before proceeding.  </b></p>
                             <div className="button-grid">
                             {emotionOptions.map((emotion) => (
-                                <Button key={emotion}  onClick={() => this.handleEmotionSelect(emotion) }>{emotion}</Button>
+                                <Button className={selectedEmotion === emotion ? "selected" : ""} key={emotion}  onClick={() => this.handleEmotionSelect(emotion) }>{emotion}</Button>
                             ))}
                             </div>
 

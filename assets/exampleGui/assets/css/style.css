@@ -143,6 +143,11 @@ html, body {
 }
 
 
+.button-grid button.selected {
+    background-color: #244e74 !important;
+    color: white;
+}
+
 .next-button-container {
     position: absolute;
     bottom: 10px;
