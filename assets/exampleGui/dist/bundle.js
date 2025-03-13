@@ -8274,7 +8274,12 @@ var App = function (_Component) {
             }
 
             if (currentScreen === "SurveyScreen") {
-                _this.setState({ currentScreen: "done" });
+                _this.setState({ currentScreen: "done" }, function () {
+                    _this.downloadJSON(participantID + ".json", responses); // Ensure JSON is saved
+                    _this.furhat.send({
+                        event_name: "endingScreen" // Ensure Furhat speaks
+                    });
+                });
                 return;
             }
 
@@ -8288,10 +8293,10 @@ var App = function (_Component) {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
                 var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity, question1: question1, question2: question2 }]);
-                if (iteration < 2) {
-                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), movedSlider: false }, _this.loadScenario);
+                if (iteration < 8) {
+                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), selectedEmotion: "", movedSlider: false, emotionOptions: shuffle(emotionOptions) }, _this.loadScenario);
                 } else {
-                    if (iteration === 2) {
+                    if (iteration === 8 && currentScreen === "scenarioQuestions") {
                         _this.setState({ iteration: iteration + 1, currentScreen: "SurveyScreen" });
                     } else {
                         _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
@@ -8598,9 +8603,13 @@ var App = function (_Component) {
                             "Click here to take the survey"
                         ),
                         _react2.default.createElement(
-                            _reactBootstrap.Button,
-                            { onClick: this.handleNextScreen, className: "next-button" },
-                            "Done"
+                            "div",
+                            { className: "button-container" },
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.handleNextScreen, className: "next-button" },
+                                "Done"
+                            )
                         )
                     )
                 ),

@@ -124,7 +124,12 @@ class App extends Component {
         }
 
         if (currentScreen === "SurveyScreen") {
-            this.setState({ currentScreen: "done" });
+            this.setState({ currentScreen: "done" }, () => {
+                this.downloadJSON(`${participantID}.json`, responses); // Ensure JSON is saved
+                this.furhat.send({
+                    event_name: "endingScreen" // Ensure Furhat speaks
+                });
+            });
             return;
         }
 
@@ -143,11 +148,11 @@ class App extends Component {
             ];
             if (iteration < 8) {
                 this.setState(
-                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), movedSlider: false },
+                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), selectedEmotion:"", movedSlider: false, emotionOptions: shuffle(emotionOptions) },
                     this.loadScenario
                 );
             } else {
-                if (iteration === 8){
+                if (iteration === 8 && currentScreen === "scenarioQuestions"){
                     this.setState(
                         { iteration: iteration + 1, currentScreen: "SurveyScreen"}
                     );
