@@ -138,8 +138,30 @@ html, body {
 
 .button-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
     gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-grid button {
+    width: 100%;
+    max-width: 180px;
+    height: 50px;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    background: white;
+    border: 2px solid #244e74;
+    color: #244e74;
+    cursor: pointer;
+}
+
+/* Adjusting the Neutral button */
+.neutral-button {
+    grid-column: 2 / 3; /* Moves it to the center column */
+    margin-top: 20px; /* Adds space below the other buttons */
 }
 
 
@@ -147,6 +169,8 @@ html, body {
     background-color: #244e74 !important;
     color: white;
 }
+
+
 
 .next-button-container {
     position: absolute;

@@ -8717,14 +8717,14 @@ var App = function (_Component) {
                                         } },
                                     emotion
                                 );
-                            })
-                        ),
-                        _react2.default.createElement(
-                            _reactBootstrap.Button,
-                            { className: "reset-button", onClick: function onClick() {
-                                    return _this4.handleEmotionSelect("Neutral");
-                                } },
-                            "Neutral Expression"
+                            }),
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { className: "neutral-button", onClick: function onClick() {
+                                        return _this4.handleEmotionSelect("Neutral");
+                                    } },
+                                "Neutral Expression"
+                            )
                         ),
                         _react2.default.createElement(
                             "div",

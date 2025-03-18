@@ -319,9 +319,9 @@ class App extends Component {
                             {emotionOptions.map((emotion) => (
                                 <Button className={selectedEmotion === emotion ? "selected" : ""} key={emotion}  onClick={() => this.handleEmotionSelect(emotion) }>{emotion}</Button>
                             ))}
+                                <Button className= "neutral-button" onClick={() => this.handleEmotionSelect("Neutral")}>Neutral Expression</Button>
                             </div>
 
-                            <Button className= "reset-button" onClick={() => this.handleEmotionSelect("Neutral")}>Neutral Expression</Button>
 
                             <div className="next-button-container">
                                 <Button className="next-button" style={{ backgroundColor: triedEmotions.size === emotionOptions.length + 1 ? "#194051" : "gray" }} onClick={this.handleNextScreen}>Next</Button>
