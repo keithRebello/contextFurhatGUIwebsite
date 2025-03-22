@@ -22,6 +22,25 @@ function shuffle(array) {
     return array;
 }
 
+function mapEmotion(expression){
+    switch(expression){
+        case "Expression 1":
+            return "Joy";
+        case "Expression 2":
+            return "Sadness";
+        case "Expression 3":
+            return "Anger";
+        case "Expression 4":
+            return "Surprise";
+        case "Expression 5":
+            return "Disgust";
+        case "Expression 6":
+            return "Fear";
+        default:
+            return "Neutral";
+    }
+}
+
 const scenarios = [
     {emotion: "Joy", intensity: "100", text:" I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. "},
     {emotion: "Sadness", intensity: "0", text:"I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  "},
@@ -41,7 +60,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentScreen: "participantID", // Start at participant ID screen
+            currentScreen: "participantID",
             iteration: 1,
             speaking: false,
             scenarioEmotion: "",
@@ -51,12 +70,12 @@ class App extends Component {
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
-            question1: "",
-            question2: "",
+            participantReasoning: "",
+            participantFurhatResponse: "",
             responses: [],
             enteredId: false,
             triedEmotions: new Set(),
-            movedSlider: false// Store user responses
+            movedSlider: false
         };
         this.furhat = null;
     }
@@ -101,7 +120,7 @@ class App extends Component {
     }
 
     handleNextScreen = () => {
-        const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID, question1, question2, triedEmotions, movedSlider, enteredId  } = this.state;
+        const { currentScreen, iteration, responses, selectedEmotion, intensity, participantID, participantReasoning, participantFurhatResponse, triedEmotions, movedSlider, enteredId  } = this.state;
 
         if (currentScreen === "scenarioRating" && triedEmotions.size < this.state.emotionOptions.length + 1) {
             alert("Please try all the expressions options before proceeding.");
@@ -118,7 +137,7 @@ class App extends Component {
             return;
         }
 
-        if (currentScreen === "scenarioQuestions" && (question1.trim() === "" || question2.trim() === "")) {
+        if (currentScreen === "scenarioQuestions" && (participantReasoning.trim() === "" || participantFurhatResponse.trim() === "")) {
             alert("Please answer both questions before proceeding.");
             return;
         }
@@ -144,11 +163,11 @@ class App extends Component {
         } else if (currentScreen === "scenarioQuestions") {
             const updatedResponses = [
                 ...responses,
-                { participantID, scenarioEmotion: this.state.scenarioEmotion, scenarioIntensity: this.state.scenarioIntensity, scenarioText: this.state.scenarioText, emotion: selectedEmotion, intensity, question1, question2}
+                { participantID, scenarioEmotion: this.state.scenarioEmotion, scenarioIntensity: this.state.scenarioIntensity, scenarioText: this.state.scenarioText, selectedEmotion: mapEmotion(this.state.selectedEmotion), selectedIntensity: this.state.intensity, participantReasoning, participantFurhatResponse}
             ];
             if (iteration < 8) {
                 this.setState(
-                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), selectedEmotion:"", movedSlider: false, emotionOptions: shuffle(emotionOptions) },
+                    { iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, participantReasoning: "", participantFurhatResponse: "", enteredId: false, triedEmotions: new Set(), selectedEmotion:"", movedSlider: false, emotionOptions: shuffle(emotionOptions) },
                     this.loadScenario
                 );
             } else {
@@ -241,7 +260,7 @@ class App extends Component {
 
 
     render() {
-        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, question1, question2, selectedEmotion,triedEmotions, movedSlider, enteredId } = this.state;
+        const { currentScreen, scenarioText, emotionOptions, intensity, participantID, participantReasoning: participantReasoning, participantFurhatResponse, selectedEmotion,triedEmotions, movedSlider, enteredId } = this.state;
 
         return (
             <Grid>
@@ -366,12 +385,12 @@ class App extends Component {
                         <h2>"{scenarioText}"</h2>
                         </Col>
                         <Col sm={12} className="question-container"><h3>Why did you pick this expression?</h3>
-                            <textarea className="text-area" value={question1} onChange={(e) => this.handleQuestionChange(e, "question1")} />
+                            <textarea className="text-area" value={participantReasoning} onChange={(e) => this.handleQuestionChange(e, "participantReasoning")} />
                             <h3>What would you want Furhat to say in response to this scenario along with this expression?</h3>
-                            <textarea className="text-area" value={question2} onChange={(e) => this.handleQuestionChange(e, "question2")} />
+                            <textarea className="text-area" value={participantFurhatResponse} onChange={(e) => this.handleQuestionChange(e, "participantFurhatResponse")} />
 
                             <div className="done-button-container">
-                                <Button onClick={this.handleNextScreen} className="next-button"  style={{ backgroundColor: (question1.trim() && question2.trim()) ? "#194051" : "gray"}}>Done</Button>
+                                <Button onClick={this.handleNextScreen} className="next-button"  style={{ backgroundColor: (participantReasoning.trim() && participantFurhatResponse.trim()) ? "#194051" : "gray"}}>Done</Button>
                             </div>
                         </Col>
                     </Row>

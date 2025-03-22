@@ -8221,6 +8221,25 @@ function shuffle(array) {
     return array;
 }
 
+function mapEmotion(expression) {
+    switch (expression) {
+        case "Expression 1":
+            return "Joy";
+        case "Expression 2":
+            return "Sadness";
+        case "Expression 3":
+            return "Anger";
+        case "Expression 4":
+            return "Surprise";
+        case "Expression 5":
+            return "Disgust";
+        case "Expression 6":
+            return "Fear";
+        default:
+            return "Neutral";
+    }
+}
+
 var scenarios = [{ emotion: "Joy", intensity: "100", text: " I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. " }, { emotion: "Sadness", intensity: "0", text: "I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  " }, { emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down. " }, { emotion: "Fear", intensity: "100", text: " I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely. " }, { emotion: "Disgust", intensity: "0", text: " I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { emotion: "Joy", intensity: "0", text: " My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside. " }, { emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special. " }, { emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair.  " }];
 var shuffledScenarios = shuffle(scenarios);
 
@@ -8246,8 +8265,8 @@ var App = function (_Component) {
                 selectedEmotion = _this$state.selectedEmotion,
                 intensity = _this$state.intensity,
                 participantID = _this$state.participantID,
-                question1 = _this$state.question1,
-                question2 = _this$state.question2,
+                participantReasoning = _this$state.participantReasoning,
+                participantFurhatResponse = _this$state.participantFurhatResponse,
                 triedEmotions = _this$state.triedEmotions,
                 movedSlider = _this$state.movedSlider,
                 enteredId = _this$state.enteredId;
@@ -8268,7 +8287,7 @@ var App = function (_Component) {
                 return;
             }
 
-            if (currentScreen === "scenarioQuestions" && (question1.trim() === "" || question2.trim() === "")) {
+            if (currentScreen === "scenarioQuestions" && (participantReasoning.trim() === "" || participantFurhatResponse.trim() === "")) {
                 alert("Please answer both questions before proceeding.");
                 return;
             }
@@ -8292,9 +8311,9 @@ var App = function (_Component) {
             } else if (currentScreen === "scenarioScaling" || currentScreen === "scenarioRating" && selectedEmotion === "Neutral") {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
-                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, emotion: selectedEmotion, intensity: intensity, question1: question1, question2: question2 }]);
+                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, selectedEmotion: mapEmotion(_this.state.selectedEmotion), selectedIntensity: _this.state.intensity, participantReasoning: participantReasoning, participantFurhatResponse: participantFurhatResponse }]);
                 if (iteration < 8) {
-                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, question1: "", question2: "", enteredId: false, triedEmotions: new Set(), selectedEmotion: "", movedSlider: false, emotionOptions: shuffle(emotionOptions) }, _this.loadScenario);
+                    _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, participantReasoning: "", participantFurhatResponse: "", enteredId: false, triedEmotions: new Set(), selectedEmotion: "", movedSlider: false, emotionOptions: shuffle(emotionOptions) }, _this.loadScenario);
                 } else {
                     if (iteration === 8 && currentScreen === "scenarioQuestions") {
                         _this.setState({ iteration: iteration + 1, currentScreen: "SurveyScreen" });
@@ -8381,7 +8400,7 @@ var App = function (_Component) {
         };
 
         _this.state = {
-            currentScreen: "participantID", // Start at participant ID screen
+            currentScreen: "participantID",
             iteration: 1,
             speaking: false,
             scenarioEmotion: "",
@@ -8391,12 +8410,12 @@ var App = function (_Component) {
             selectedEmotion: "",
             intensity: 50,
             participantID: "",
-            question1: "",
-            question2: "",
+            participantReasoning: "",
+            participantFurhatResponse: "",
             responses: [],
             enteredId: false,
             triedEmotions: new Set(),
-            movedSlider: false // Store user responses
+            movedSlider: false
         };
         _this.furhat = null;
         return _this;
@@ -8454,8 +8473,8 @@ var App = function (_Component) {
                 emotionOptions = _state.emotionOptions,
                 intensity = _state.intensity,
                 participantID = _state.participantID,
-                question1 = _state.question1,
-                question2 = _state.question2,
+                participantReasoning = _state.participantReasoning,
+                participantFurhatResponse = _state.participantFurhatResponse,
                 selectedEmotion = _state.selectedEmotion,
                 triedEmotions = _state.triedEmotions,
                 movedSlider = _state.movedSlider,
@@ -8848,23 +8867,23 @@ var App = function (_Component) {
                             null,
                             "Why did you pick this expression?"
                         ),
-                        _react2.default.createElement("textarea", { className: "text-area", value: question1, onChange: function onChange(e) {
-                                return _this4.handleQuestionChange(e, "question1");
+                        _react2.default.createElement("textarea", { className: "text-area", value: participantReasoning, onChange: function onChange(e) {
+                                return _this4.handleQuestionChange(e, "participantReasoning");
                             } }),
                         _react2.default.createElement(
                             "h3",
                             null,
                             "What would you want Furhat to say in response to this scenario along with this expression?"
                         ),
-                        _react2.default.createElement("textarea", { className: "text-area", value: question2, onChange: function onChange(e) {
-                                return _this4.handleQuestionChange(e, "question2");
+                        _react2.default.createElement("textarea", { className: "text-area", value: participantFurhatResponse, onChange: function onChange(e) {
+                                return _this4.handleQuestionChange(e, "participantFurhatResponse");
                             } }),
                         _react2.default.createElement(
                             "div",
                             { className: "done-button-container" },
                             _react2.default.createElement(
                                 _reactBootstrap.Button,
-                                { onClick: this.handleNextScreen, className: "next-button", style: { backgroundColor: question1.trim() && question2.trim() ? "#194051" : "gray" } },
+                                { onClick: this.handleNextScreen, className: "next-button", style: { backgroundColor: participantReasoning.trim() && participantFurhatResponse.trim() ? "#194051" : "gray" } },
                                 "Done"
                             )
                         )
