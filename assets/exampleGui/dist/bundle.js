@@ -8240,8 +8240,9 @@ function mapEmotion(expression) {
     }
 }
 
-var scenarios = [{ emotion: "Joy", intensity: "100", text: " I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget. " }, { emotion: "Sadness", intensity: "0", text: "I accidentally spilled a few drops of juice on my homework just before handing it in. The teacher didn’t seem to notice, but I was frustrated because I’d put a lot of effort into it.  " }, { emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down. " }, { emotion: "Fear", intensity: "100", text: " I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely. " }, { emotion: "Disgust", intensity: "0", text: " I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { emotion: "Joy", intensity: "0", text: " My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside. " }, { emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special. " }, { emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair.  " }];
-var shuffledScenarios = shuffle(scenarios);
+var blocks = [{ "blockID": "1", "scenarioList": [2, 4, 7, 8, 9, 10] }, { "blockID": "2", "scenarioList": [1, 3, 6, 7, 9, 10] }, { "blockID": "3", "scenarioList": [6, 7, 8, 10, 11, 12] }, { "blockID": "4", "scenarioList": [1, 3, 5, 6, 7, 9] }, { "blockID": "5", "scenarioList": [1, 3, 5, 6, 10, 11] }, { "blockID": "6", "scenarioList": [5, 6, 8, 9, 10, 11] }, { "blockID": "7", "scenarioList": [5, 6, 7, 8, 9, 12] }, { "blockID": "8", "scenarioList": [1, 4, 7, 8, 10, 11] }, { "blockID": "9", "scenarioList": [5, 6, 7, 8, 11, 12] }, { "blockID": "10", "scenarioList": [1, 4, 6, 10, 11, 12] }, { "blockID": "11", "scenarioList": [4, 5, 7, 9, 10, 11] }, { "blockID": "12", "scenarioList": [1, 3, 4, 6, 7, 8] }, { "blockID": "13", "scenarioList": [1, 3, 4, 9, 10, 12] }, { "blockID": "14", "scenarioList": [4, 5, 7, 9, 10, 12] }, { "blockID": "15", "scenarioList": [4, 5, 7, 8, 10, 12] }, { "blockID": "16", "scenarioList": [1, 3, 4, 7, 9, 11] }, { "blockID": "17", "scenarioList": [4, 5, 6, 9, 11, 12] }, { "blockID": "18", "scenarioList": [1, 3, 4, 8, 11, 12] }, { "blockID": "19", "scenarioList": [1, 3, 5, 8, 9, 12] }, { "blockID": "20", "scenarioList": [3, 4, 6, 8, 9, 10] }, { "blockID": "21", "scenarioList": [3, 4, 6, 8, 9, 11] }, { "blockID": "22", "scenarioList": [2, 4, 6, 9, 11, 12] }, { "blockID": "23", "scenarioList": [1, 3, 5, 8, 10, 12] }, { "blockID": "24", "scenarioList": [2, 3, 4, 8, 11, 12] }, { "blockID": "25", "scenarioList": [1, 3, 5, 7, 11, 12] }, { "blockID": "26", "scenarioList": [2, 3, 6, 8, 10, 12] }, { "blockID": "27", "scenarioList": [2, 3, 6, 7, 11, 12] }, { "blockID": "28", "scenarioList": [2, 3, 6, 7, 10, 12] }, { "blockID": "29", "scenarioList": [2, 3, 5, 8, 9, 10] }, { "blockID": "30", "scenarioList": [2, 3, 5, 8, 9, 11] }, { "blockID": "31", "scenarioList": [1, 2, 4, 5, 6, 8] }, { "blockID": "32", "scenarioList": [2, 3, 5, 7, 10, 11] }, { "blockID": "33", "scenarioList": [1, 2, 4, 5, 6, 8] }, { "blockID": "34", "scenarioList": [1, 2, 4, 5, 6, 7] }, { "blockID": "35", "scenarioList": [1, 2, 7, 8, 10, 11] }, { "blockID": "36", "scenarioList": [2, 3, 4, 7, 9, 12] }, { "blockID": "37", "scenarioList": [1, 2, 7, 8, 9, 12] }, { "blockID": "38", "scenarioList": [1, 2, 7, 8, 9, 11] }, { "blockID": "39", "scenarioList": [1, 2, 6, 9, 10, 12] }, { "blockID": "40", "scenarioList": [2, 3, 4, 5, 10, 11] }, { "blockID": "41", "scenarioList": [1, 2, 6, 9, 10, 11] }, { "blockID": "42", "scenarioList": [2, 3, 4, 5, 6, 7] }, { "blockID": "43", "scenarioList": [1, 2, 5, 9, 11, 12] }, { "blockID": "44", "scenarioList": [1, 2, 4, 5, 10, 12] }];
+
+var scenariosList = [{ vignetteID: 1, emotion: "Joy", intensity: "100", text: "I won first place in the school science fair today! When they called my name, everyone clapped, and I felt incredibly proud. My parents were so happy too—it was a moment I’ll never forget." }, { vignetteID: 2, emotion: "Joy", intensity: "0", text: "My teacher gave me a small compliment in class for answering a difficult question. It wasn’t a big deal, but it gave me a nice feeling inside." }, { vignetteID: 3, emotion: "Sadness", intensity: "100", text: "My best friend told me they are moving to another city next month. I know we can still talk online, but it feels like things will never be the same." }, { vignetteID: 4, emotion: "Sadness", intensity: "0", text: "I worked hard on my school project, but I didn’t get the grade I was hoping for. I still did really well but I felt discouraged even though I knew I tried my best." }, { vignetteID: 5, emotion: "Anger", intensity: "100", text: "My younger sibling accidentally deleted a project I’d been working on for hours. I felt so frustrated that I had to walk away to calm down." }, { vignetteID: 6, emotion: "Anger", intensity: "0", text: "I don’t play video games very often but I was playing a game online, and another player wasn’t following the rules. I got frustrated and stopped playing because it wasn’t fair." }, { vignetteID: 7, emotion: "Fear", intensity: "100", text: "I was walking home late in the evening, and I thought I heard footsteps behind me. My heart started racing, and I felt scared until I got home safely." }, { vignetteID: 8, emotion: "Fear", intensity: "0", text: "During class, the teacher asked a question, and I wasn’t sure of the answer. I felt nervous, hoping she wouldn’t call on me." }, { vignetteID: 9, emotion: "Disgust", intensity: "0", text: "Someone spilled milk in the cafeteria, and it stayed there for days. By the end, the smell was terrible, and it made me feel really uncomfortable." }, { vignetteID: 10, emotion: "Disgust", intensity: "0", text: "I found an old sandwich in my backpack that I had forgotten about. It smelled bad, so I threw it away." }, { vignetteID: 11, emotion: "Surprise", intensity: "100", text: "I came home and found a surprise party waiting for me! All my friends and family were there, and I had no idea they had planned something so special." }, { vignetteID: 12, emotion: "Surprise", intensity: "100", text: "When I got my math test back, I was surprised to see I got a high score. I wasn’t expecting such a good result, but it felt great." }];
 
 var emotionOptions = ["Expression 1", "Expression 2", "Expression 3", "Expression 4", "Expression 5", "Expression 6"];
 
@@ -8301,8 +8302,9 @@ var App = function (_Component) {
                 });
                 return;
             }
-
-            if (currentScreen === "participantID") {
+            if (currentScreen === "blockID") {
+                _this.setState({ currentScreen: "participantID" });
+            } else if (currentScreen === "participantID") {
                 _this.setState({ currentScreen: "scenarioDisplay" });
             } else if (currentScreen === "scenarioDisplay") {
                 _this.setState({ currentScreen: "scenarioRating" });
@@ -8311,11 +8313,11 @@ var App = function (_Component) {
             } else if (currentScreen === "scenarioScaling" || currentScreen === "scenarioRating" && selectedEmotion === "Neutral") {
                 _this.setState({ currentScreen: "scenarioQuestions" });
             } else if (currentScreen === "scenarioQuestions") {
-                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, selectedEmotion: mapEmotion(_this.state.selectedEmotion), selectedIntensity: _this.state.intensity, participantReasoning: participantReasoning, participantFurhatResponse: participantFurhatResponse }]);
-                if (iteration < 8) {
+                var updatedResponses = [].concat(_toConsumableArray(responses), [{ participantID: participantID, blockId: _this.state.blockID, scenarioEmotion: _this.state.scenarioEmotion, scenarioIntensity: _this.state.scenarioIntensity, scenarioText: _this.state.scenarioText, selectedEmotion: mapEmotion(_this.state.selectedEmotion), selectedIntensity: _this.state.intensity, participantReasoning: participantReasoning, participantFurhatResponse: participantFurhatResponse }]);
+                if (iteration < 6) {
                     _this.setState({ iteration: iteration + 1, currentScreen: "scenarioDisplay", responses: updatedResponses, intensity: 50, participantReasoning: "", participantFurhatResponse: "", enteredId: false, triedEmotions: new Set(), selectedEmotion: "", movedSlider: false, emotionOptions: shuffle(emotionOptions) }, _this.loadScenario);
                 } else {
-                    if (iteration === 8 && currentScreen === "scenarioQuestions") {
+                    if (iteration === 6 && currentScreen === "scenarioQuestions") {
                         _this.setState({ iteration: iteration + 1, currentScreen: "SurveyScreen" });
                     } else {
                         _this.setState({ currentScreen: "done", responses: updatedResponses }, function () {
@@ -8382,8 +8384,30 @@ var App = function (_Component) {
             });
         };
 
-        _this.handleQuestionChange = function (event, question) {
-            _this.setState(_defineProperty({}, question, event.target.value));
+        _this.handleBlockIDChange = function (event) {
+            _this.setState({ blockID: event.target.value }, function () {
+                // Include callback to setState.
+                var selectedBlock = blocks.find(function (block) {
+                    return block.blockID === _this.state.blockID;
+                });
+                if (selectedBlock) {
+                    var scenariosIDs = selectedBlock.scenarioList;
+                    var scenarios = scenariosList.filter(function (scenario) {
+                        return scenariosIDs.includes(scenario.vignetteID);
+                    });
+                    _this.setState({ shuffledScenarios: shuffle(scenarios) }, function () {
+                        console.log("Updated shuffledScenarios:", _this.state.shuffledScenarios);
+                        console.log("Updated blockID:", _this.state.blockID);
+                        _this.loadScenario();
+                    });
+                } else {
+                    _this.setState({ shuffledScenarios: [] }, function () {
+                        console.log("Updated shuffledScenarios:", _this.state.shuffledScenarios);
+                        console.log("Updated blockID:", _this.state.blockID);
+                        _this.loadScenario();
+                    });
+                }
+            });
         };
 
         _this.handleParticipantIDChange = function (event) {
@@ -8400,15 +8424,17 @@ var App = function (_Component) {
         };
 
         _this.state = {
-            currentScreen: "participantID",
+            currentScreen: "blockID",
             iteration: 1,
             speaking: false,
+            shuffledScenarios: [],
             scenarioEmotion: "",
             scenarioIntensity: 0,
             scenarioText: "",
             emotionOptions: shuffle(emotionOptions),
             selectedEmotion: "",
             intensity: 50,
+            blockID: "",
             participantID: "",
             participantReasoning: "",
             participantFurhatResponse: "",
@@ -8429,8 +8455,10 @@ var App = function (_Component) {
             (0, _furhatGui2.default)().then(function (connection) {
                 _this2.furhat = connection;
                 _this2.setupSubscriptions();
-                _this2.loadScenario();
-            }).catch(console.error);
+            }).catch(function (error) {
+                console.error("FurhatGUI connection failed:", error);
+                alert("FurhatGUI failed to connect!");
+            });
         }
     }, {
         key: "setupSubscriptions",
@@ -8447,9 +8475,8 @@ var App = function (_Component) {
     }, {
         key: "loadScenario",
         value: function loadScenario() {
-            console.log(shuffledScenarios);
-            var scenarioIndex = (this.state.iteration - 1) % scenarios.length;
-            this.setState({ scenarioText: shuffledScenarios[scenarioIndex].text, scenarioEmotion: shuffledScenarios[scenarioIndex].emotion, scenarioIntensity: shuffledScenarios[scenarioIndex].intensity });
+            var scenarioIndex = (this.state.iteration - 1) % this.state.shuffledScenarios.length;
+            this.setState({ scenarioText: this.state.shuffledScenarios[scenarioIndex].text, scenarioEmotion: this.state.shuffledScenarios[scenarioIndex].emotion, scenarioIntensity: this.state.shuffledScenarios[scenarioIndex].intensity });
         }
     }, {
         key: "downloadJSON",
@@ -8472,6 +8499,7 @@ var App = function (_Component) {
                 scenarioText = _state.scenarioText,
                 emotionOptions = _state.emotionOptions,
                 intensity = _state.intensity,
+                blockID = _state.blockID,
                 participantID = _state.participantID,
                 participantReasoning = _state.participantReasoning,
                 participantFurhatResponse = _state.participantFurhatResponse,
@@ -8484,6 +8512,29 @@ var App = function (_Component) {
             return _react2.default.createElement(
                 _reactBootstrap.Grid,
                 null,
+                currentScreen === "blockID" && _react2.default.createElement(
+                    _reactBootstrap.Row,
+                    { className: "participant-id-container" },
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { sm: 8, className: "text-box" },
+                        _react2.default.createElement(
+                            "h3",
+                            null,
+                            "Enter Block ID:"
+                        ),
+                        _react2.default.createElement(_reactBootstrap.FormControl, { type: "text", value: blockID, onChange: this.handleBlockIDChange }),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "button-container" },
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.handleNextScreen, className: "next-button", style: { backgroundColor: "red" } },
+                                "Next"
+                            )
+                        )
+                    )
+                ),
                 currentScreen === "participantID" && _react2.default.createElement(
                     _reactBootstrap.Row,
                     { className: "participant-id-container" },
