@@ -8669,7 +8669,7 @@ var App = function (_Component) {
                         ),
                         _react2.default.createElement(
                             "a",
-                            { href: "google.com", target: "_blank", rel: "noopener noreferrer" },
+                            { href: "https://uwaterloo.ca1.qualtrics.com/jfe/form/SV_7UI1t6NSlv01Mqi", target: "_blank", rel: "noopener noreferrer" },
                             "Click here to take the survey"
                         ),
                         _react2.default.createElement(
@@ -8713,7 +8713,7 @@ var App = function (_Component) {
                             { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
-                            " out of 8"
+                            " out of 6"
                         ),
                         _react2.default.createElement(
                             "h2",
@@ -8749,7 +8749,7 @@ var App = function (_Component) {
                             { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
-                            " out of 8"
+                            " out of 6"
                         ),
                         _react2.default.createElement(
                             "h2",
@@ -8818,7 +8818,7 @@ var App = function (_Component) {
                             { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
-                            " out of 8"
+                            " out of 6"
                         ),
                         _react2.default.createElement(
                             "h2",
@@ -8900,7 +8900,7 @@ var App = function (_Component) {
                             { className: "scenario-out-of" },
                             "Scenario: ",
                             this.state.iteration,
-                            " out of 8"
+                            " out of 6"
                         ),
                         _react2.default.createElement(
                             "h2",

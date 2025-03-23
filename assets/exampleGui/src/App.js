@@ -388,7 +388,7 @@ class App extends Component {
                     <Row className="done-screen">
                         <Col sm={12} className="done-text">
                             <p>Your responses have been saved successfully. Please now complete the survey by clicking the link below. Once you are done, you can complete this study by clicking the "done" button.</p>
-                            <a href ="google.com" target="_blank" rel="noopener noreferrer">
+                            <a href ="https://uwaterloo.ca1.qualtrics.com/jfe/form/SV_7UI1t6NSlv01Mqi" target="_blank" rel="noopener noreferrer">
                                 Click here to take the survey
                             </a>
                             <div className="button-container">
